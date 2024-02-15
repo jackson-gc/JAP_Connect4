@@ -29,12 +29,12 @@ public class RightPanel extends JPanel {
         JLabel redTurnLabel = new JLabel("Player 0");
         redTurnLabel.setBorder(new EmptyBorder(4, 30, 0, 80));
         
-        JButton redTurn = new JButton("");
+        JLabel redTurn = new JLabel(new ImageIcon("src\\imageLib\\redTurn.png"));
         redTurn.setPreferredSize(new Dimension(210,100));
         redTurn.setCursor(Cursor.getDefaultCursor());
         redTurn.setEnabled(true);
         
-        JButton yellowTurn = new JButton("");
+        JLabel yellowTurn = new JLabel(new ImageIcon("src\\imageLib\\yellowTurn.png"));
         yellowTurn.setPreferredSize(new Dimension(210,100));
         yellowTurn.setCursor(Cursor.getDefaultCursor());
         yellowTurn.setEnabled(false);
@@ -52,7 +52,7 @@ public class RightPanel extends JPanel {
         playerTimerDisplay.setPreferredSize(new Dimension(510, 80));
         playerTimerDisplay.setBackground(Color.RED);
 
-        JLabel turnTimeLeft = new JLabel("Time Left In Turn: 1:28");
+        JLabel turnTimeLeft = new JLabel("<html>Time Left In Turn: <u>1:28<u/></html>");
         turnTimeLeft.setFont(turnTimeLeft.getFont().deriveFont(Font.BOLD, 24));	
         turnTimeLeft.setPreferredSize(new Dimension(400, 72));
         turnTimeLeft.setHorizontalAlignment(JLabel.CENTER);
@@ -60,9 +60,8 @@ public class RightPanel extends JPanel {
         turnTimeLeft.setBackground(Color.LIGHT_GRAY);
         turnTimeLeft.setOpaque(true);
       
-        JButton timerImg = new JButton(new ImageIcon("timerIcon.png"));
+        JLabel timerImg = new JLabel(new ImageIcon("src\\imageLib\\timerIcon.png"));
         timerImg.setPreferredSize(new Dimension(72, 72));
-        timerImg.setEnabled(false);
         
  
         playerTimerDisplay.add(timerImg);
