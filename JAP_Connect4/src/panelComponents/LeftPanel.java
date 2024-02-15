@@ -1,5 +1,6 @@
 package panelComponents;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -8,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.MatteBorder;
 
 public class LeftPanel extends JPanel {
 	private static final int BOARD_ROWS = 6;
@@ -15,8 +17,10 @@ public class LeftPanel extends JPanel {
 	private static final int GRID_WIDTH = 140;
 	
     public LeftPanel() {
-        setPreferredSize(new Dimension(1385, 100)); // Set the preferred size
-
+        setPreferredSize(new Dimension(1386, 100)); // Set the preferred size
+    
+        MatteBorder rightBoarder = new MatteBorder(0, 0, 0, 2, Color.GRAY);
+		setBorder(rightBoarder);
         
         JPanel boardSlots = new JPanel(new GridLayout(1, BOARD_COLS));
         for (int i = 0 ; i < BOARD_COLS; i++) {

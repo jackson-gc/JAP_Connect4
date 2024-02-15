@@ -3,8 +3,8 @@ package panelComponents;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -18,7 +18,7 @@ public class BottomPanel extends JPanel {
         
         chatField.setPreferredSize(new Dimension(1700, 90));
         
-        JButton sendButton = new JButton("SEND");
+        JButton sendButton = new JButton(new ImageIcon("src\\imageLib\\sendButtonOverlay.png"));
         sendButton.setPreferredSize(new Dimension(190, 90));
         
         
