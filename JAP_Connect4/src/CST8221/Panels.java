@@ -1,5 +1,5 @@
+package CST8221;
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 import javax.swing.JPanel;
 
@@ -8,8 +8,12 @@ import panelComponents.LeftPanel;
 import panelComponents.RightPanel;
 
 public class Panels extends JPanel {
-    public Panels() {
-    	final Color BG_BLUE = new Color(187, 212, 227);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6764656409124794105L;
+
+	public Panels() {
         setLayout(new BorderLayout());
 
         // Adding panels from the Panels package

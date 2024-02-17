@@ -9,7 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class BottomPanel extends JPanel {
-    public BottomPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5426800239199025595L;
+
+	public BottomPanel() {
         setBackground(Color.LIGHT_GRAY);
         setPreferredSize(new Dimension(200, 100)); // Set the preferred size
 

@@ -7,14 +7,18 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 
 public class RightPanel extends JPanel {
-    public RightPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1448673650776121690L;
+
+	public RightPanel() {
     	final Color panelBG = new Color(187, 212, 227);
     	final Color componentBG = new Color(201, 221, 237);
     	
