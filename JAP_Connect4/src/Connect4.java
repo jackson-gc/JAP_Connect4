@@ -13,6 +13,7 @@ public class Connect4 extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(1920, 1080));
         setResizable(false);
+        setLocation(960, 540);
 
         // Panels
         Panels panel = new Panels();

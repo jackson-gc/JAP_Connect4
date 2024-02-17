@@ -1,0 +1,5 @@
+Changed :
+ - Game board design.
+ - Main menu simpliflied (as it may changed with program functionality).
+ - Colours are slightly different from original diagram.
+ - Game timer & changing chip colours will be implemented later-on.
