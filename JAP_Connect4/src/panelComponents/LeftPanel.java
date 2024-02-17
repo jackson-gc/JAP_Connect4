@@ -12,6 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
 public class LeftPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1527031301225314114L;
 	private static final int BOARD_ROWS = 6;
 	private static final int BOARD_COLS = 7;
 	private static final int GRID_WIDTH = 140;
