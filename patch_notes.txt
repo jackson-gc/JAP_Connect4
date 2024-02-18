@@ -1,3 +1,7 @@
+Important Note:
+ - Monitor display setting must be set to 1920x1080 at 100% scaling.
+ - Settings > System > Display
+
 Changed :
  - Game board design.
  - Main menu simpliflied (as it may changed with program functionality).

@@ -11,13 +11,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import CST8221.Panels;
 
+/**
+ * RightPanel Class panel container for the turn-display, turn timer, and chat/move box
+ */
 public class RightPanel extends JPanel {
     /**
-	 * 
+	 * auto-generated serial uid
 	 */
 	private static final long serialVersionUID = -1448673650776121690L;
 
+	/**
+	 * RightPanel Constructor
+	 */
 	public RightPanel() {
     	final Color panelBG = new Color(187, 212, 227);
     	final Color componentBG = new Color(201, 221, 237);
@@ -37,12 +44,12 @@ public class RightPanel extends JPanel {
         JLabel redTurnLabel = new JLabel("Player 0");
         redTurnLabel.setBorder(new EmptyBorder(4, 30, 0, 80));
         
-        JLabel redTurn = new JLabel(new ImageIcon("src\\imageLib\\redTurn.png"));
+        JLabel redTurn = new JLabel(new ImageIcon(Panels.imgPath + "redTurn.png"));
         redTurn.setPreferredSize(new Dimension(210,100));
         redTurn.setCursor(Cursor.getDefaultCursor());
         redTurn.setEnabled(false);
         
-        JLabel yellowTurn = new JLabel(new ImageIcon("src\\imageLib\\yellowTurn.png"));
+        JLabel yellowTurn = new JLabel(new ImageIcon(Panels.imgPath + "yellowTurn.png"));
         yellowTurn.setPreferredSize(new Dimension(210,100));
         yellowTurn.setCursor(Cursor.getDefaultCursor());
         yellowTurn.setEnabled(true);
@@ -68,7 +75,7 @@ public class RightPanel extends JPanel {
         turnTimeLeft.setBackground(Color.WHITE);
         turnTimeLeft.setOpaque(true);
       
-        JLabel timerImg = new JLabel(new ImageIcon("src\\imageLib\\timerIcon.png"));
+        JLabel timerImg = new JLabel(new ImageIcon(Panels.imgPath + "timerIcon.png"));
         timerImg.setPreferredSize(new Dimension(72, 72));
         playerTimerDisplay.add(timerImg);
         playerTimerDisplay.add(turnTimeLeft);

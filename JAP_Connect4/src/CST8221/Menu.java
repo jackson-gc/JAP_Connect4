@@ -10,19 +10,40 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
+/**
+ * Menu class for window head
+ */
 public class Menu extends JFrame implements ActionListener {
 	
 	/**
-	 * 
+	 * auto-generated serial uid
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 7282865349944705405L;
+	
+	/**
+	 * JMenuBar initial declaration
+	 */
 	JMenuBar mbar;
+	/**
+	 * JMenu, menu and submenu initial declaration
+	 */
 	JMenu menu, submenu;
+	/**
+	 * JMenuItem initial declaration
+	 */
 	JMenuItem mitem;
+	/**
+	 * JButton initial declaration
+	 */
 	JButton button;
+	/**
+	 * JPanel initial declaration
+	 */
 	JPanel panel;
 	
+	/**
+	 * Menu constructor
+	 */
 	public Menu() {
 		setTitle("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,6 +67,11 @@ public class Menu extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * menu main
+	 * 
+	 * @param args commandline arguments
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			Menu mainMenu = new Menu();
@@ -53,6 +79,9 @@ public class Menu extends JFrame implements ActionListener {
 		});
 	}
 
+	/**
+	 * Empty actionPerformed override
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

@@ -26,6 +26,7 @@ SET DOCPACK=CST8221
 SET DOCERR=labs-javadoc.err
 SET MAINCLASSSRC=src/CST8221/Main.java
 SET MAINCLASSBIN=CST8221.Main
+SET IMGLIB=imageLib
 
 @echo off
 
@@ -63,19 +64,20 @@ jar cvfe %JARNAME% %MAINCLASSBIN% . > ../%JAROUT% 2> ../%JARERR%
 
 ECHO "3. Creating Javadoc ..............."
 cd ..
-javadoc -cp ".;%BINDIR%;" --module-path -d %DOCDIR% -sourcepath %SRCDIR% -subpackages %DOCPACK% 2> %DOCERR%
+javadoc -cp ".;%BINDIR%" -d %DOCDIR% -sourcepath %SRCDIR% -subpackages %DOCPACK% 2> %DOCERR%
+
+ECHO "4. Updating Image Library ........."
+mkdir %BINDIR%\%IMGLIB%
+xcopy /y /e %IMGLIB% %BINDIR%\%IMGLIB%
 
 cd bin
-ECHO "4. Running Jar ...................."\
-jar -cf %JARNAME% .*
+ECHO "5. Running Jar ...................."
 start java -jar %JARNAME%
 cd ..
 
 ECHO "[END OF SCRIPT -------------------]"
 ECHO "                                   "
 @echo on
-
-pause
 
 :: ---------------------------------------------------------------------
 :: End of Script (Labs - W24)

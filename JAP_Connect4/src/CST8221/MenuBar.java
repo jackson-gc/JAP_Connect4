@@ -2,13 +2,18 @@ package CST8221;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
+/**
+ * MenuBar component class
+ */
 public class MenuBar extends JMenuBar {
     /**
-	 * 
+	 * auto-generated serial uid
 	 */
 	private static final long serialVersionUID = 1019707613887489945L;
 
+	/**
+	 * MenuBar Constructor
+	 */
 	public MenuBar() {
         // File
         JMenu Emenu = new JMenu("File");

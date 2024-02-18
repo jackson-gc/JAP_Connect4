@@ -6,10 +6,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
+/**
+ * Connect4 class, boots the main game body
+ */
 public class Connect4 extends JFrame implements ActionListener {
-    private static final long serialVersionUID = 1L;
+    
+    /**
+	 * auto-generated serial uid
+	 */
+	private static final long serialVersionUID = 5369068481793381074L;
 
+	/**
+	 * Connect4 Constructor
+	 */
     public Connect4() {
         setTitle("Connect 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,6 +43,11 @@ public class Connect4 extends JFrame implements ActionListener {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * Connect4 main
+     * 
+     * @param args commandline arguments
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Connect4 connect4 = new Connect4();
