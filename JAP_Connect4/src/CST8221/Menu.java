@@ -77,7 +77,7 @@ public class Menu extends JFrame implements ActionListener {
 		
 		
 		
-		panel = new ImagedPanel("Menu.png");
+		panel = new JPanel();
 		
 		panel.add(hostButton);
 		panel.add(joinButton);
