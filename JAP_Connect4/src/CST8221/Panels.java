@@ -4,9 +4,9 @@ import java.nio.file.Paths;
 
 import javax.swing.JPanel;
 
-import panelComponents.BottomPanel;
-import panelComponents.LeftPanel;
-import panelComponents.RightPanel;
+import panelComponents.ChatPanel;
+import panelComponents.BoardPanel;
+import panelComponents.SystemPanel;
 
 /**
  * Panel wrapper class that sets a layout for other panels.
@@ -21,6 +21,9 @@ public class Panels extends JPanel {
 	 */
 	public static final String imgPath = Paths.get(".").toAbsolutePath().toString() + "\\imageLib\\";
 
+	public SystemPanel botRPanel;
+	protected BoardPanel leftPanel;
+	protected ChatPanel bottomPanel;
 	/**
 	 * Panels Constructor
 	 */
@@ -28,9 +31,9 @@ public class Panels extends JPanel {
         setLayout(new BorderLayout());
 
         // Adding panels from the Panels package
-        RightPanel botRPanel = new RightPanel();
-        LeftPanel leftPanel = new LeftPanel();
-        BottomPanel bottomPanel = new BottomPanel();
+        botRPanel = new SystemPanel();
+    	leftPanel = new BoardPanel();
+      	bottomPanel = new ChatPanel();
 
         add(leftPanel, BorderLayout.WEST);
         add(botRPanel, BorderLayout.EAST);

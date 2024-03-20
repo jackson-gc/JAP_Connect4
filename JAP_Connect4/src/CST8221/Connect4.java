@@ -3,9 +3,15 @@ package CST8221;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import controler.GameBoard;
+import panelComponents.BoardPanel;
 /**
  * Connect4 class, boots the main game body
  */
@@ -15,6 +21,10 @@ public class Connect4 extends JFrame implements ActionListener {
 	 * auto-generated serial uid
 	 */
 	private static final long serialVersionUID = 5369068481793381074L;
+	public static GameBoard gb = new GameBoard();
+	public static BoardPanel gbViewControl;
+	public static boolean saveState = false;
+	protected static Connect4 connect4;
 
 	/**
 	 * Connect4 Constructor
@@ -36,12 +46,23 @@ public class Connect4 extends JFrame implements ActionListener {
 
         pack();
         setLocationRelativeTo(null);
+        
+        addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowClosing(WindowEvent e) {
+        		if(!saveState)
+        			gb.getWorkingFile().delete();
+        			
+        		dispose();
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
     }
+    
 
     /**
      * Connect4 main
@@ -50,7 +71,7 @@ public class Connect4 extends JFrame implements ActionListener {
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Connect4 connect4 = new Connect4();
+            connect4 = new Connect4();
             connect4.setVisible(true);
         });
     }

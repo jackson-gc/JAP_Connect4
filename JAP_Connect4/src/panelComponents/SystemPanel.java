@@ -16,7 +16,7 @@ import CST8221.Panels;
 /**
  * RightPanel Class panel container for the turn-display, turn timer, and chat/move box
  */
-public class RightPanel extends JPanel {
+public class SystemPanel extends JPanel {
     /**
 	 * auto-generated serial uid
 	 */
@@ -25,7 +25,7 @@ public class RightPanel extends JPanel {
 	/**
 	 * RightPanel Constructor
 	 */
-	public RightPanel() {
+	public SystemPanel() {
     	final Color panelBG = new Color(187, 212, 227);
     	final Color componentBG = new Color(201, 221, 237);
     	

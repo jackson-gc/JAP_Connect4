@@ -1,7 +1,20 @@
 package CST8221;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+
+import controler.GameBoard;
+import panelComponents.BoardPanel;
 /**
  * MenuBar component class
  */
@@ -14,17 +27,37 @@ public class MenuBar extends JMenuBar {
 	/**
 	 * MenuBar Constructor
 	 */
+
 	public MenuBar() {
         // File
-        JMenu Emenu = new JMenu("File");
-        JMenuItem EmenuItem = new JMenuItem("Exit");
-        JMenuItem EmenuItem1 = new JMenuItem("Open");
-        JMenuItem EmenuItem2 = new JMenuItem("Save");
-        EmenuItem.addActionListener(e -> System.exit(0));
-        Emenu.add(EmenuItem);
-        Emenu.add(EmenuItem1);
-        Emenu.add(EmenuItem2);
-        add(Emenu);
+		JMenu fileMenu = new JMenu("File");
+	    JMenuItem exitMenuItem = new JMenuItem("Exit");
+	    JMenuItem loadMenuItem = new JMenuItem("Load");
+	    JMenuItem saveMenuItem = new JMenuItem("Save");
+	    fileMenu.add(saveMenuItem);
+	    fileMenu.add(loadMenuItem);
+	    fileMenu.add(exitMenuItem);
+
+	    saveMenuItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {	        	
+	        	Connect4.saveState = true;
+	        }
+	    });    
+	    
+	    loadMenuItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            openFileChooser();
+	        }
+	    });
+	    
+	    
+	    exitMenuItem.addActionListener(e -> System.exit(0));    
+        
+        add(fileMenu);
+        
+        
 
         // Connection
         JMenu Cmenu = new JMenu("Connection");
@@ -70,4 +103,32 @@ public class MenuBar extends JMenuBar {
         Hmenu.add(HmenuItem1);
         add(Hmenu);
     }
+	
+	
+    private void openFileChooser() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(".\\saves"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            
+            if (!Connect4.gb.isNewGame) {
+            	Connect4.gb = new GameBoard(selectedFile);
+            	
+            } else {
+            	File oldFile = Connect4.gb.getWorkingFile();
+            	Connect4.gb = new GameBoard(selectedFile);
+            	System.out.println("deleting: " + oldFile.getAbsolutePath());
+            	oldFile.delete();
+            }
+            Connect4.gbViewControl = new BoardPanel();
+            
+            
+            
+            Connect4.gbViewControl.repaint();
+            Connect4.gb.printBoard();
+        }
+
+    }
+     	
 }

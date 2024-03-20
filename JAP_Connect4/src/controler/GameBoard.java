@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
+import CST8221.Connect4;
+
 public class GameBoard {
+	public static final int BOARD_ROWS = 6;
+	public static final int BOARD_COLS = 7;
+	public GameBoardTile[][] tileList = new GameBoardTile[BOARD_ROWS][BOARD_COLS];
 	private final String path = "saves\\";
 	private File workingFile;
-	private final int ROWS = 6;
-	private final int COLS = 7;
-	private GameBoardTile[][] tileList = new GameBoardTile[ROWS][COLS];
-	
 	private byte winState; 
+	public boolean isNewGame;
 
 	/**
 	 * Method handling file IO
@@ -21,10 +24,16 @@ public class GameBoard {
 	 * @return true to show file has been successfully updated, false if not.
 	 */
 	private boolean updateWorkingFile() {
+		int lnTrack = 0;
 		try (FileWriter fw = new FileWriter(this.workingFile)){
 			for (GameBoardTile[] tileRow : tileList) {
 				for (GameBoardTile tile : tileRow) {
-					fw.append(tile.tileState + "\n");
+					lnTrack++;
+		        	if (lnTrack % 7 == 0) {
+		        		fw.append(tile.tileState + "\n");
+		        	} else  {
+		        		fw.append(tile.tileState + " ");
+		        	}
 				}
 			}
 					
@@ -45,45 +54,37 @@ public class GameBoard {
 		return true;
 	}
 
+	public File getWorkingFile() {
+		return workingFile;
+	}
 	
-	
-	GameBoard(File gameFile) {
+	public GameBoard(File gameFile) {
 		winState = (byte) 00;
 		
 		// Create a blank board...
 		if (gameFile == null) {
+			isNewGame = true;
 			try {
 				long unixTime = System.currentTimeMillis() / 1000L;
 				workingFile = new File(path + unixTime + ".cfour");
 				workingFile.createNewFile();
 				
-				
-				
-				
-				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 
-			
-			
-			for (int i = 0 ; i < ROWS ; i++) {
-				for (int j = 0 ; j < COLS ; j++) {
+			for (int i = 0 ; i < BOARD_ROWS ; i++) {
+				for (int j = 0 ; j < BOARD_COLS ; j++) {
 					int[] position = {i, j};
-					this.tileList[i][j] = new GameBoardTile((byte) 00, position);
+					tileList[i][j] = new GameBoardTile((byte) 00, position);
 				}
 			}
 		
 			updateWorkingFile();
-			
-			
-			
-			
+
 		} else {
+			isNewGame = false;
 			loadGame(gameFile);
-			
-			
 		}		
 	}
 	
@@ -91,46 +92,73 @@ public class GameBoard {
 	/**
 	 * Default constructor chains up
 	 */
-	GameBoard(){ this(null); }
+	public GameBoard(){ this(null); }
 	
 	
 	public boolean checkWin() {
 		return false;
 	}
 	
-	public void updateWinLoss() {
-		
+	
+	public void updateWinLoss(boolean hostWin) {
+		winState = (hostWin)? (byte) 01 : (byte) 02;
 	}
 
-	public void killBoard() {
-		
+	public void killBoard(boolean exitGame) {
+		for (GameBoardTile[] tileRow : tileList) {
+			for (GameBoardTile tile : tileRow) {
+				tile.boardPosition[0] = 0;
+				tile.boardPosition[1] = 0;
+				
+				tile.tileState = 0;
+			}
+		}
+		if (!exitGame) {
+			updateWorkingFile();
+		} else {
+			
+		}
 	}
 	
-	public void saveGame() {
-		
-		
-	}
-	
-	public void loadGame(File file) {
-	    try ( Scanner trk = new Scanner(file)){
-	    	int i = 0, j = 0;
-	        while (trk.hasNextLine()) {
-	            int num = Integer.parseInt(trk.nextLine());
-	            if(j > 6) {
-	            	i++;
-	            	j = 0;
-	            	
-	            	int[] position = {i, j};
-	            	tileList[i][j] = new GameBoardTile((byte) num, position);
-	            	System.out.println(num);
-	            }
-	            
-	            j++;
+	public boolean loadGame(File file) {
+		this.workingFile = file;
+	    try (Scanner trk = new Scanner(file)){
+	    	int currentTiles = 0;
+	    	int row = -1;
+	    	int col = 0;
+	    	
+	    	
+	        while (trk.hasNextInt()) {
+	        	if (currentTiles > BOARD_ROWS * BOARD_COLS) {
+	        		System.out.println("Error: Save state could not be loaded.");
+	        		return false;
+	        	}
+	        	currentTiles++;
+
+	        	if (col % BOARD_COLS == 0) {
+	        		row++;
+	        		col = 0;
+	        	}
+
+	        	
+	        	int num = trk.nextInt();
+	        	if (num > 2 || num < 0) {
+	        		System.out.println("Warning: Save state may be corrupted.");
+	        		num = 0;
+	        	}
+	        	
+	     
+            	int[] position = {row, col};
+            	tileList[row][col] = new GameBoardTile((byte) num, position);
+            	
+            	
+	        	col++;
 	        }
 	        trk.close();
 	    } catch (FileNotFoundException e) {
 	        e.printStackTrace();
 	    }
+	    return true;
 	}
 	
 	
@@ -142,13 +170,41 @@ public class GameBoard {
 	}
 	
 	
-	
-	
-	public static void main(String[] args) {
-		File na = new File("saves\\1710902522.cfour");
-		GameBoard gb = new GameBoard(na);
-		
+    public void printBoard() {
+    	int lnTrack = 0;
+		for (GameBoardTile[] tileRow : tileList) {
+			for (GameBoardTile tile : tileRow) {
+				lnTrack++;
+	        	if (lnTrack % 7 == 0) {
+	        		System.out.print(tile.tileState + "\n");
+	        	} else  {
+	        		System.out.print(tile.tileState + " ");
+	        	}
+			}
+		}
 	}
-	
-	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

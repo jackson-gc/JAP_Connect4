@@ -13,7 +13,7 @@ import CST8221.Panels;
 /**
  * BottomPanel Class, panel container for the chat feild and send button.
  */
-public class BottomPanel extends JPanel {
+public class ChatPanel extends JPanel {
     /**
 	 * auto-generated serial uid
 	 */
@@ -22,7 +22,7 @@ public class BottomPanel extends JPanel {
 	/**
 	 * BottomPanel Constructor
 	 */
-	public BottomPanel() {
+	public ChatPanel() {
         setBackground(Color.LIGHT_GRAY);
         setPreferredSize(new Dimension(200, 100)); // Set the preferred size
 
