@@ -1,8 +1,12 @@
 package CST8221;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -35,7 +39,8 @@ public class Menu extends JFrame implements ActionListener {
 	/**
 	 * JButton initial declaration
 	 */
-	JButton button;
+	JButton joinButton, hostButton;
+	
 	/**
 	 * JPanel initial declaration
 	 */
@@ -46,12 +51,23 @@ public class Menu extends JFrame implements ActionListener {
 	 */
 	public Menu() {
 		setTitle("Main Menu");
+		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(500, 600));
-		setResizable(false);
+		setResizable(true);
 		
-		button = new JButton("Start Game");
-		button.addActionListener(new ActionListener() {
+		hostButton = new JButton("Host Game");
+		joinButton = new JButton("Join Game");
+		
+		
+		joinButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connect4 mainpage = new Connect4();
+				mainpage.setVisible(true);
+				dispose();
+			}
+		});
+		hostButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Connect4 mainpage = new Connect4();
 				mainpage.setVisible(true);
@@ -59,9 +75,19 @@ public class Menu extends JFrame implements ActionListener {
 			}
 		});
 		
-		panel = new JPanel();
-		panel.add(button);
+		
+		
+		panel = new ImagedPanel("Menu.png");
+		
+		panel.add(hostButton);
+		panel.add(joinButton);
+		
+		panel.setBackground(Color.RED);
 		add(panel);
+		
+	
+		
+		
 		
 		pack();
 		setLocationRelativeTo(null);
@@ -87,4 +113,7 @@ public class Menu extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
 }
+
+

@@ -35,6 +35,7 @@ public class LeftPanel extends JPanel {
 	 * LeftPanel class, panel container for the game board.
 	 */
     public LeftPanel() {
+   
         setPreferredSize(new Dimension(1386, 100)); // Set the preferred size
        
         MatteBorder rightBoarder = new MatteBorder(0, 0, 0, 2, Color.GRAY);
@@ -43,6 +44,9 @@ public class LeftPanel extends JPanel {
         JPanel boardSlots = new JPanel(new GridLayout(1, BOARD_COLS));
         for (int i = 0 ; i < BOARD_COLS; i++) {
         	JButton gridling = new JButton();
+        	
+
+        	
         	gridling.setPreferredSize(new Dimension(GRID_WIDTH, 30));
 
         	boardSlots.add(gridling);
@@ -89,5 +93,5 @@ public class LeftPanel extends JPanel {
         super.paintComponent(g);
         // Paint the background image
         g.drawImage(new ImageIcon(Panels.imgPath + "redPile.png").getImage(), 0, 0, getWidth(), getHeight(), this);
-    }
+        }
 }

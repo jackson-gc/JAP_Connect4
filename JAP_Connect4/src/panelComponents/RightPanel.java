@@ -93,5 +93,6 @@ public class RightPanel extends JPanel {
         add(playerTurnDisplay);
         add(playerTimerDisplay);
         add(chatMoveBox);
+
     }
 }
