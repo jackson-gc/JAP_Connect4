@@ -89,7 +89,7 @@ public class BoardPanel extends JPanel {
                 	break;
                 	
                 }
-                System.out.println("adding: " + icon);
+                System.out.println("addifng: " + icon);
                 
                 JLabel jl = new JLabel(icon);
                 boardGrid.add(jl);
