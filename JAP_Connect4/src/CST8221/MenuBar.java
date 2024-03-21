@@ -86,7 +86,7 @@ public class MenuBar extends JMenuBar {
 	        		Connect4.playerMove();
 	        	
 	        	Connect4.gb.killBoard(false);
-	        	refreshBoard();
+	        	Connect4.gb.refreshBoard();
 	        }
 	    });    
         
@@ -133,20 +133,9 @@ public class MenuBar extends JMenuBar {
             	oldFile.delete();
             	
             }
-            refreshBoard();
+            Connect4.gb.refreshBoard();
         }
 
-    }
-    
-    private void refreshBoard() {
-        // Recreate the BoardPanel and add it to the container
-        BoardPanel newBoardPanel = new BoardPanel();
-        Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
-        Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
-        Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
-        Connect4.connect4.repaint(); // Refresh the UI
-        Connect4.gbViewControl = newBoardPanel; // Update the reference	
-        Connect4.gb.printBoard();
     }
      	
 }

@@ -7,10 +7,12 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
@@ -52,6 +54,7 @@ public class BoardPanel extends JPanel {
             slot.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	byte initalPlayer = Connect4.currentTurn;
                     // Get the source of the event (the clicked button)
                     JButton clickedButton = (JButton) e.getSource();
                     
@@ -60,8 +63,61 @@ public class BoardPanel extends JPanel {
                     int col = index % GameBoard.BOARD_COLS;
                     
                     // Pass the row and column to a method to handle the click event
-                    System.out.println(Connect4.gbViewControl.dropInCol(col, Connect4.playerMove())?"drop Success":" drop Failed");
-
+                    
+                    if(Connect4.gb.columnDepth[col] > 0) {
+                    	if (!Connect4.gbViewControl.dropInCol(col, Connect4.playerMove()))
+                    		System.out.println("drop failed");
+                    }
+                    		
+                    else
+                    	System.out.println("Cannot add to this colum.");
+                    
+                    Connect4.gb.printBoard();
+                    
+                    
+                    if(Connect4.gb.checkWin(initalPlayer)) {
+                    	JDialog dialog = new JDialog(Connect4.connect4, "CONGRADULATIONS!", true);
+                    	dialog.setSize(275, 120);
+       
+                        
+                        JPanel jp = new JPanel();
+                        jp.setPreferredSize(new Dimension(200,200));
+                        
+                        JLabel label = null;
+                    	if (initalPlayer == 1) {
+                    		label = new JLabel("THE RED PLAYER HAS WON THE GAME");
+     
+                    	} else if (initalPlayer == 2) {
+                    		label = new JLabel("THE YELLOW PLAYER HAS WON THE GAME");
+                    		
+                    	}
+                    	
+                    	jp.add(label);
+                        JButton okButton = new JButton("OK");
+                        okButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                            	Connect4.gb.killBoard(false);
+                            	Connect4.gb.refreshBoard();
+                                dialog.dispose();
+                            }
+                        });
+                        
+                        dialog.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                            	Connect4.gb.killBoard(false);
+                            	Connect4.gb.refreshBoard();
+                            	dialog.dispose();
+                            }
+                        });
+                        
+                        jp.add(okButton);
+                    	
+                    	dialog.add(jp);
+                        
+                        dialog.setVisible(true);
+                        
+                    }
                 }
             });
         }
@@ -90,17 +146,16 @@ public class BoardPanel extends JPanel {
     		return false;
 
     	for (int i = 0; i < floor; i++) {
-    		System.out.println("["+ i +"," + column+"]");
-    		 try {
-                 Thread.sleep(50);
+//    		 try {
+//                 Thread.sleep(50);
                  targetUpdate(i, column, tileType);
                  if (i > 0) {
                 	 targetUpdate(i-1, column, (byte) 0);
                  }
                  
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
+//             } catch (InterruptedException e) {
+//                 e.printStackTrace();
+//             }
     	}
     	int position[] = {floor - 1, column};
         Connect4.gb.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
@@ -111,7 +166,6 @@ public class BoardPanel extends JPanel {
     
     
     private void targetUpdate(int row, int col, byte tileType) {
-    	System.out.println("inp");
         // Assuming row and col are zero-based indices
         // Calculate the index in the grid
         int index = row * GameBoard.BOARD_COLS + col;
@@ -148,7 +202,6 @@ public class BoardPanel extends JPanel {
     
     
     private void fullPaintBoard() {
-        System.out.println("painting...");
         boardGrid = new JPanel();
         boardGrid.setLayout(gridLayout);
         for (int i = 0; i < GameBoard.BOARD_ROWS; i++) {

@@ -26,7 +26,7 @@ public class Connect4 extends JFrame implements ActionListener {
 	public static BoardPanel gbViewControl = new BoardPanel();
 	public static byte currentTurn = 01;
 	public static boolean saveState = false;
-	protected static Connect4 connect4;
+	public static Connect4 connect4;
 	Panels panel;
 
 	/**
@@ -79,8 +79,6 @@ public class Connect4 extends JFrame implements ActionListener {
     		SystemPanel.yellowTurn.repaint();    		
     		currentTurn--;
     	}
-    	
-    	
 		return temp;
     }
 

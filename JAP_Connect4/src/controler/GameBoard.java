@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import CST8221.Connect4;
+import panelComponents.BoardPanel;
 
 public class GameBoard {
 	public static final int BOARD_ROWS = 6;
@@ -96,7 +97,52 @@ public class GameBoard {
 	public GameBoard(){ this(null); }
 	
 	
-	public boolean checkWin() {
+	public boolean checkWin(byte targetTile) {
+		final int MAGIC_WIN_LENGTH = 4;
+		int r, c, i;
+	
+		for (r = 0; r < BOARD_ROWS; r++) {
+			for (c = 0; c < BOARD_COLS - MAGIC_WIN_LENGTH; c++) {
+				boolean found = true;
+	          	for (i = 0; i < MAGIC_WIN_LENGTH; i++) {
+	          		if (tileList[r][c + i].tileState != targetTile) {
+	          			found = false;
+	          			break;
+	          		}
+	          	}
+	         	if (found)
+	         		return true;
+			}
+		}
+		
+		for (r = 0; r <= BOARD_ROWS - MAGIC_WIN_LENGTH; r++) {
+            for (c = 0; c < BOARD_COLS; c++) {
+            	boolean found = true;
+            	for (i = 0; i < MAGIC_WIN_LENGTH; i++) {
+            		if (tileList[r + i][c].tileState != targetTile) {
+            			found = false;
+            			break;           			
+            		}
+            	}
+            	if (found)
+            		return true;
+            }
+		}
+		
+		for (r = 0; r <= BOARD_ROWS - MAGIC_WIN_LENGTH; r++) {
+            for (c = 0; c <= BOARD_COLS - MAGIC_WIN_LENGTH; c++) {
+                boolean foundForward = true;
+                boolean foundBackward = true;
+                for (i = 0; i < MAGIC_WIN_LENGTH; i++) {
+                    if (tileList[r + i][r + i].tileState != targetTile)
+                        foundForward = false;
+                    if (tileList[r + i][r + 3 - i].tileState != targetTile)
+                        foundBackward = false;
+                }
+                if (foundForward || foundBackward)
+                    return true;
+            }
+        }
 		return false;
 	}
 	
@@ -200,6 +246,17 @@ public class GameBoard {
 		}
 		colCheck();
 	}
+    
+    public void refreshBoard() {
+        // Recreate the BoardPanel and add it to the container
+        BoardPanel newBoardPanel = new BoardPanel();
+        Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
+        Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
+        Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
+        Connect4.connect4.repaint(); // Refresh the UI
+        Connect4.gbViewControl = newBoardPanel; // Update the reference	
+        Connect4.gb.printBoard();
+    }
 }
 
 
