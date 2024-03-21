@@ -26,29 +26,29 @@ public class MenuBar extends JMenuBar {
 	public MenuBar() {
         // File
 		JMenu fileMenu = new JMenu("File");
-	    JMenuItem exitMenuItem = new JMenuItem("Exit");
-	    JMenuItem loadMenuItem = new JMenuItem("Load");
-	    JMenuItem saveMenuItem = new JMenuItem("Save");
-	    fileMenu.add(saveMenuItem);
-	    fileMenu.add(loadMenuItem);
-	    fileMenu.add(exitMenuItem);
+	    JMenuItem exitItem = new JMenuItem("Exit");
+	    JMenuItem loadItem = new JMenuItem("Load");
+	    JMenuItem saveItem = new JMenuItem("Save");
+	    fileMenu.add(saveItem);
+	    fileMenu.add(loadItem);
+	    fileMenu.add(exitItem);
 
-	    saveMenuItem.addActionListener(new ActionListener() {
+	    saveItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
 	        	Connect4.saveState = true;
+	        	System.out.println(Connect4.gb.getWorkingFile() + " is " + Connect4.saveState);
 	        }
 	    });    
 	    
-	    loadMenuItem.addActionListener(new ActionListener() {
+	    loadItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            openFileChooser();
 	        }
 	    });
 	    
-	    
-	    exitMenuItem.addActionListener(e -> System.exit(0));    
+	    exitItem.addActionListener(e -> System.exit(0)); 
         
         add(fileMenu);
         
@@ -76,9 +76,22 @@ public class MenuBar extends JMenuBar {
 
         // Options
         JMenu Omenu = new JMenu("Game Options");
-        JMenuItem OmenuItem = new JMenuItem("Reset board");
+        JMenuItem resetBoardItem = new JMenuItem("Reset board");
         JMenuItem OmenuItem1 = new JMenuItem("Set game length");
-        Omenu.add(OmenuItem);
+        
+        resetBoardItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {	        	
+	        	if (Connect4.currentTurn == 02)
+	        		Connect4.playerMove();
+	        	
+	        	Connect4.gb.killBoard(false);
+	        	refreshBoard();
+	        }
+	    });    
+        
+        
+        Omenu.add(resetBoardItem);
         Omenu.add(OmenuItem1);
         add(Omenu);
 
@@ -106,24 +119,34 @@ public class MenuBar extends JMenuBar {
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            if (!Connect4.gb.isNewGame) {
+            String fileName = selectedFile.getName();
+            if (!Connect4.gb.isNewGame || Connect4.saveState) {
             	Connect4.gb = new GameBoard(selectedFile);
             	
+            } else if (fileName.equals(Connect4.gb.getWorkingFile().getName())) {
+            	System.out.println("Not changing file.");
+            
             } else {
             	File oldFile = Connect4.gb.getWorkingFile();
             	Connect4.gb = new GameBoard(selectedFile);
             	System.out.println("deleting: " + oldFile.getAbsolutePath());
             	oldFile.delete();
+            	
             }
-            // Recreate the BoardPanel and add it to the container
-            BoardPanel newBoardPanel = new BoardPanel("new");
-            Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
-            Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
-            Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
-            Connect4.connect4.repaint(); // Refresh the UI
-            Connect4.gbViewControl = newBoardPanel; // Update the reference	
+            refreshBoard();
         }
 
+    }
+    
+    private void refreshBoard() {
+        // Recreate the BoardPanel and add it to the container
+        BoardPanel newBoardPanel = new BoardPanel();
+        Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
+        Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
+        Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
+        Connect4.connect4.repaint(); // Refresh the UI
+        Connect4.gbViewControl = newBoardPanel; // Update the reference	
+        Connect4.gb.printBoard();
     }
      	
 }

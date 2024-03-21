@@ -13,18 +13,18 @@ public class GameBoard {
 	public static final int BOARD_ROWS = 6;
 	public static final int BOARD_COLS = 7;
 	public GameBoardTile[][] tileList = new GameBoardTile[BOARD_ROWS][BOARD_COLS];
+	public int[] columnDepth = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
 	private final String path = "saves\\";
 	private File workingFile;
 	private byte winState; 
 	public boolean isNewGame;
-	public int[] colFull = new int[BOARD_COLS];
 
 	/**
 	 * Method handling file IO
 	 * 
 	 * @return true to show file has been successfully updated, false if not.
 	 */
-	private boolean updateWorkingFile() {
+	public boolean updateWorkingFile() {
 		int lnTrack = 0;
 		try (FileWriter fw = new FileWriter(this.workingFile)){
 			for (GameBoardTile[] tileRow : tileList) {
@@ -162,18 +162,21 @@ public class GameBoard {
 	    return true;
 	}
 	
-	private void colCheck() {
+	public void colCheck() {
 		int position = 0;
+		int tempCol[] = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
 		for (GameBoardTile[] tileRow : tileList) {
 			for (GameBoardTile tile : tileRow) {
 				if (tile.tileState > 0) {
 					int col = position % BOARD_COLS;
-					colFull[col]++;
+					tempCol[col]--;
 					
 				}
 				position++;
 			}
 		}
+		columnDepth = tempCol;
+		System.out.println(Arrays.toString(columnDepth));
 	}
 	
 	

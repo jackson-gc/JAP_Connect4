@@ -9,7 +9,7 @@ public class GameBoardTile {
 	/**
 	 * Position relative to the GameBoard.
 	 */
-	protected int[] boardPosition;
+	public int[] boardPosition;
 	
 	/**
 	 * State of current board tile, 
@@ -18,9 +18,9 @@ public class GameBoardTile {
 	 *  1 - Player0 (host)
 	 *  2 - Player1 (client)
 	 */
-	public byte tileState;
+	protected byte tileState;
 	
-	GameBoardTile(byte givenState, int[] pos){
+	public GameBoardTile(byte givenState, int[] pos){
 		this.tileState = givenState;
 		this.boardPosition = pos;
 	}

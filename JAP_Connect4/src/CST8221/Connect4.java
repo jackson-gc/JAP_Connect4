@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import controler.GameBoard;
 import panelComponents.BoardPanel;
+import panelComponents.SystemPanel;
 /**
  * Connect4 class, boots the main game body
  */
@@ -22,9 +23,11 @@ public class Connect4 extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 5369068481793381074L;
 	public static GameBoard gb = new GameBoard();
-	public static BoardPanel gbViewControl = new BoardPanel("old");
+	public static BoardPanel gbViewControl = new BoardPanel();
+	public static byte currentTurn = 01;
 	public static boolean saveState = false;
 	protected static Connect4 connect4;
+	Panels panel;
 
 	/**
 	 * Connect4 Constructor
@@ -37,7 +40,7 @@ public class Connect4 extends JFrame implements ActionListener {
         setLocation(960, 540);
 
         // Panels
-        Panels panel = new Panels();
+        panel = new Panels();
         setContentPane(panel);
 
         // Menu bar
@@ -50,12 +53,35 @@ public class Connect4 extends JFrame implements ActionListener {
         addWindowListener(new WindowAdapter() {
         	@Override
         	public void windowClosing(WindowEvent e) {
-        		if(!saveState)
+        		if(!saveState) {			
         			gb.getWorkingFile().delete();
+        		}
         			
         		dispose();
             }
         });
+    }
+    
+    public static byte playerMove() {
+    	byte temp = currentTurn;
+    	
+    	if (currentTurn == 01) {
+    		SystemPanel.redTurn.setEnabled(false);
+    		SystemPanel.redTurn.repaint();
+    		SystemPanel.yellowTurn.setEnabled(true);
+    		SystemPanel.yellowTurn.repaint();    		
+    		currentTurn++;
+    	}
+    	else {
+    		SystemPanel.redTurn.setEnabled(true);
+    		SystemPanel.redTurn.repaint();		
+    		SystemPanel.yellowTurn.setEnabled(false);
+    		SystemPanel.yellowTurn.repaint();    		
+    		currentTurn--;
+    	}
+    	
+    	
+		return temp;
     }
 
     @Override

@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import CST8221.Connect4;
 import CST8221.Panels;
 
 /**
@@ -21,6 +22,9 @@ public class SystemPanel extends JPanel {
 	 * auto-generated serial uid
 	 */
 	private static final long serialVersionUID = -1448673650776121690L;
+	
+	public static JLabel redTurn;
+	public static JLabel yellowTurn;
 
 	/**
 	 * RightPanel Constructor
@@ -44,15 +48,15 @@ public class SystemPanel extends JPanel {
         JLabel redTurnLabel = new JLabel("Player 0");
         redTurnLabel.setBorder(new EmptyBorder(4, 30, 0, 80));
         
-        JLabel redTurn = new JLabel(new ImageIcon(Panels.imgPath + "redTurn.png"));
+        redTurn = new JLabel(new ImageIcon(Panels.imgPath + "redTurn.png"));
         redTurn.setPreferredSize(new Dimension(210,100));
         redTurn.setCursor(Cursor.getDefaultCursor());
-        redTurn.setEnabled(false);
+        redTurn.setEnabled(Connect4.currentTurn == 01);
         
-        JLabel yellowTurn = new JLabel(new ImageIcon(Panels.imgPath + "yellowTurn.png"));
+        yellowTurn = new JLabel(new ImageIcon(Panels.imgPath + "yellowTurn.png"));
         yellowTurn.setPreferredSize(new Dimension(210,100));
         yellowTurn.setCursor(Cursor.getDefaultCursor());
-        yellowTurn.setEnabled(true);
+        yellowTurn.setEnabled(Connect4.currentTurn == 02);
 
         
         playerTurnDisplay.add(redTurnLabel);
