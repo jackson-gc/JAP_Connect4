@@ -2,6 +2,8 @@ package panelComponents;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,6 +35,7 @@ public class ChatPanel extends JPanel {
         
         JButton sendButton = new JButton(new ImageIcon(Panels.imgPath+"sendButtonOverlay.png"));
         sendButton.setPreferredSize(new Dimension(190, 90));
+       
         
         
         add(chatField);

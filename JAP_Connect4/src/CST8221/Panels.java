@@ -22,7 +22,6 @@ public class Panels extends JPanel {
 	public static final String imgPath = Paths.get(".").toAbsolutePath().toString() + "\\imageLib\\";
 
 	public SystemPanel botRPanel;
-	protected BoardPanel leftPanel;
 	protected ChatPanel bottomPanel;
 	/**
 	 * Panels Constructor
@@ -32,10 +31,9 @@ public class Panels extends JPanel {
 
         // Adding panels from the Panels package
         botRPanel = new SystemPanel();
-    	leftPanel = new BoardPanel();
       	bottomPanel = new ChatPanel();
 
-        add(leftPanel, BorderLayout.WEST);
+        add(Connect4.gbViewControl, BorderLayout.WEST);
         add(botRPanel, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
     }

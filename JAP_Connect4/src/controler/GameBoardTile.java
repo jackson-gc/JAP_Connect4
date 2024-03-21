@@ -45,11 +45,12 @@ public class GameBoardTile {
 				System.out.println("Error: current save file may be corrupt");
 				break;
 		}
-		System.out.println(img.toString());
 		return img;
 	}
 	
-	
+	public byte getTileState() {
+		return this.tileState;
+	}
 	
 	/**
 	 * Updates the image of a given tile sprite based on tileState

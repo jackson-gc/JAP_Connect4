@@ -3,15 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import controler.GameBoard;
 import panelComponents.BoardPanel;
@@ -111,7 +106,6 @@ public class MenuBar extends JMenuBar {
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            
             if (!Connect4.gb.isNewGame) {
             	Connect4.gb = new GameBoard(selectedFile);
             	
@@ -121,12 +115,13 @@ public class MenuBar extends JMenuBar {
             	System.out.println("deleting: " + oldFile.getAbsolutePath());
             	oldFile.delete();
             }
-            Connect4.gbViewControl = new BoardPanel();
-            
-            
-            
-            Connect4.gbViewControl.repaint();
-            Connect4.gb.printBoard();
+            // Recreate the BoardPanel and add it to the container
+            BoardPanel newBoardPanel = new BoardPanel("new");
+            Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
+            Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
+            Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
+            Connect4.connect4.repaint(); // Refresh the UI
+            Connect4.gbViewControl = newBoardPanel; // Update the reference	
         }
 
     }

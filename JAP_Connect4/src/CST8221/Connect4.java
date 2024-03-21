@@ -22,7 +22,7 @@ public class Connect4 extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 5369068481793381074L;
 	public static GameBoard gb = new GameBoard();
-	public static BoardPanel gbViewControl;
+	public static BoardPanel gbViewControl = new BoardPanel("old");
 	public static boolean saveState = false;
 	protected static Connect4 connect4;
 

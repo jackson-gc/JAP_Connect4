@@ -17,6 +17,7 @@ public class GameBoard {
 	private File workingFile;
 	private byte winState; 
 	public boolean isNewGame;
+	public int[] colFull = new int[BOARD_COLS];
 
 	/**
 	 * Method handling file IO
@@ -161,7 +162,19 @@ public class GameBoard {
 	    return true;
 	}
 	
-	
+	private void colCheck() {
+		int position = 0;
+		for (GameBoardTile[] tileRow : tileList) {
+			for (GameBoardTile tile : tileRow) {
+				if (tile.tileState > 0) {
+					int col = position % BOARD_COLS;
+					colFull[col]++;
+					
+				}
+				position++;
+			}
+		}
+	}
 	
 	
 	
@@ -182,6 +195,7 @@ public class GameBoard {
 	        	}
 			}
 		}
+		colCheck();
 	}
 }
 
