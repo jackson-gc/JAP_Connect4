@@ -22,7 +22,7 @@ public class ImagedPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Paint the background image
-        g.drawImage(new ImageIcon(Panels.imgPath + this.path).getImage(), 0, 0, getWidth(), getHeight(), this);
+        // Paint the background image	
+        g.drawImage(new ImageIcon(this.path).getImage(), 0, 0, getWidth(), getHeight(), this);
         }
 	}

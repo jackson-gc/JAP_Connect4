@@ -1,11 +1,22 @@
 package model;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import CST8221.Connect4;
 import panelComponents.BoardPanel;
@@ -14,11 +25,13 @@ public class GameBoard {
 	public static final int BOARD_ROWS = 6;
 	public static final int BOARD_COLS = 7;
 	public GameBoardTile[][] tileList = new GameBoardTile[BOARD_ROWS][BOARD_COLS];
-	public int[] columnDepth = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
+	private int[] columnDepth = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
 	private final String path = "saves\\";
 	private File workingFile;
-	private byte winState; 
+	public byte winState; 
 	public boolean isNewGame;
+
+	private Connect4 c4;
 
 	/**
 	 * Method handling file IO
@@ -60,7 +73,8 @@ public class GameBoard {
 		return workingFile;
 	}
 	
-	public GameBoard(File gameFile) {
+	public GameBoard(Connect4 connect4, File gameFile) {
+		this.c4 = connect4;
 		winState = (byte) 00;
 		
 		// Create a blank board...
@@ -91,12 +105,6 @@ public class GameBoard {
 	}
 	
 	
-	/**
-	 * Default constructor chains up
-	 */
-	public GameBoard(){ this(null); }
-	
-	
 	public boolean checkWin(byte targetTile) {
 		final int MAGIC_WIN_LENGTH = 4;
 		int r, c, i;
@@ -110,8 +118,10 @@ public class GameBoard {
 	          			break;
 	          		}
 	          	}
-	         	if (found)
+	         	if (found) {
+	         		updateWinLoss(targetTile);	         		
 	         		return true;
+	         	}
 			}
 		}
 		
@@ -124,8 +134,10 @@ public class GameBoard {
             			break;           			
             		}
             	}
-            	if (found)
+            	if (found) {
+            		updateWinLoss(targetTile);            		
             		return true;
+            	}
             }
 		}
 		
@@ -134,37 +146,99 @@ public class GameBoard {
                 boolean foundForward = true;
                 boolean foundBackward = true;
                 for (i = 0; i < MAGIC_WIN_LENGTH; i++) {
-                    if (tileList[r + i][r + i].tileState != targetTile)
+                    if (tileList[r + i][c + i].tileState != targetTile)
                         foundForward = false;
-                    if (tileList[r + i][r + 3 - i].tileState != targetTile)
+                    if (tileList[r + i][c + MAGIC_WIN_LENGTH - 1 - i].tileState != targetTile)
                         foundBackward = false;
                 }
-                if (foundForward || foundBackward)
-                    return true;
+                if (foundForward || foundBackward) {
+                	updateWinLoss(targetTile);
+                	return true;
+                }
             }
         }
 		return false;
 	}
 	
 	
-	public void updateWinLoss(boolean hostWin) {
-		winState = (hostWin)? (byte) 01 : (byte) 02;
+	public void updateWinLoss(byte winTile) {
+		this.winState = winTile;
+		
+		JDialog dialog = new JDialog(c4, "CONGRADULATIONS!", true);
+    	dialog.setSize(275, 120);
+    	
+    	if (winState == 03) {
+    		
+    	}
+    	
+        JPanel dialogPanel = new JPanel();
+        dialogPanel.setPreferredSize(new Dimension(200,200));
+        
+        JLabel label = null;
+        
+        switch(winState) {
+        case 01:
+        	
+        	label = new JLabel("THE RED PLAYER HAS WON THE GAME");
+        	break;
+        	
+        case 02:
+        	label = new JLabel("THE YELLOW PLAYER HAS WON THE GAME");
+        	break;
+        	
+        case 03:
+        	dialog.setTitle("Cats Game");
+        	label = new JLabel("No one wins!");
+        	break;
+        	
+        default:
+        	break;
+        }
+        
+    	c4.timer.setStatus(2);
+    	
+    	dialogPanel.add(label);
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	c4.gb.refreshBoard(false);
+            	dialog.dispose();
+            }
+        });
+        
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	c4.gb.refreshBoard(false);
+            	dialog.dispose();
+            }
+        });
+        
+        dialogPanel.add(okButton);
+    	
+    	dialog.add(dialogPanel);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
 	}
 
 	public void killBoard(boolean exitGame) {
+		for (int i = 0; i < BOARD_COLS ; i++) {
+			columnDepth[i] = BOARD_ROWS;
+		}
+			
+		
 		for (GameBoardTile[] tileRow : tileList) {
 			for (GameBoardTile tile : tileRow) {
 				tile.boardPosition[0] = 0;
 				tile.boardPosition[1] = 0;
 				
 				tile.tileState = 0;
+				
 			}
 		}
-		if (!exitGame) {
+		if (!exitGame)
 			updateWorkingFile();
-		} else {
-			
-		}
+		
 	}
 	
 	public boolean loadGame(File file) {
@@ -208,7 +282,7 @@ public class GameBoard {
 	    return true;
 	}
 	
-	public void colCheck() {
+	public int[] colCheck() {
 		int position = 0;
 		int tempCol[] = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
 		for (GameBoardTile[] tileRow : tileList) {
@@ -216,19 +290,14 @@ public class GameBoard {
 				if (tile.tileState > 0) {
 					int col = position % BOARD_COLS;
 					tempCol[col]--;
-					
 				}
 				position++;
 			}
 		}
+		
 		columnDepth = tempCol;
 		System.out.println(Arrays.toString(columnDepth));
-	}
-	
-	
-	
-	public void timesUp() {
-		
+		return columnDepth;
 	}
 	
 	
@@ -247,15 +316,22 @@ public class GameBoard {
 		colCheck();
 	}
     
-    public void refreshBoard() {
+    public void refreshBoard(boolean closeWindow) {
+    	if (c4.currentTurn == 02)
+    		c4.playerMove();
+    	
+    	
+    	c4.timer.setStatus(3);
+    	c4.timer.setStatus(1);
+    	
+    	killBoard(closeWindow);
         // Recreate the BoardPanel and add it to the container
-        BoardPanel newBoardPanel = new BoardPanel();
-        Connect4.connect4.remove(Connect4.gbViewControl); // Remove the old BoardPanel
-        Connect4.connect4.add(newBoardPanel); // Add the new BoardPanel
-        Connect4.connect4.revalidate(); // Inform the layout manager to recalculate the layout
-        Connect4.connect4.repaint(); // Refresh the UI
-        Connect4.gbViewControl = newBoardPanel; // Update the reference	
-        Connect4.gb.printBoard();
+        BoardPanel newBoardPanel = new BoardPanel(c4);
+        c4.remove(c4.gbViewControl); // Remove the old BoardPanel
+        c4.add(newBoardPanel); // Add the new BoardPanel
+        c4.revalidate(); // Inform the layout manager to recalculate the layout
+        c4.repaint(); // Refresh the UI
+        c4.gbViewControl = newBoardPanel; // Update the reference	
     }
 }
 

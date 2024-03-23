@@ -1,15 +1,25 @@
 package CST8221;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import model.GameBoard;
-import panelComponents.BoardPanel;
+import panelComponents.SystemPanel;
 /**
  * MenuBar component class
  */
@@ -19,11 +29,13 @@ public class MenuBar extends JMenuBar {
 	 */
 	private static final long serialVersionUID = 1019707613887489945L;
 
+	private Connect4 c4;
+	
 	/**
 	 * MenuBar Constructor
 	 */
-
-	public MenuBar() {
+	public MenuBar(Connect4 connect4) {
+		this.c4 = connect4;
         // File
 		JMenu fileMenu = new JMenu("File");
 	    JMenuItem exitItem = new JMenuItem("Exit");
@@ -36,8 +48,8 @@ public class MenuBar extends JMenuBar {
 	    saveItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
-	        	Connect4.saveState = true;
-	        	System.out.println(Connect4.gb.getWorkingFile() + " is " + Connect4.saveState);
+	        	c4.saveState = true;
+	        	System.out.println(c4.gb.getWorkingFile() + " is " + c4.saveState);
 	        }
 	    });    
 	    
@@ -48,18 +60,7 @@ public class MenuBar extends JMenuBar {
 	        }
 	    });
 	    
-	    exitItem.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            
-	        	Connect4.timer.start();
-	        	
-	        	
-	        	
-	        	
-	        }
-	    });
-	    //exitItem.addActionListener(e -> System.exit(0)); 
+	    exitItem.addActionListener(e -> System.exit(0)); 
         
         add(fileMenu);
         
@@ -88,22 +89,87 @@ public class MenuBar extends JMenuBar {
         // Options
         JMenu Omenu = new JMenu("Game Options");
         JMenuItem resetBoardItem = new JMenuItem("Reset board");
-        JMenuItem OmenuItem1 = new JMenuItem("Set game length");
+        JMenuItem setTurnItem = new JMenuItem("Set Turn Length");
+        
+        setTurnItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                c4.timer.setStatus(0);
+                JDialog dialog = new JDialog(c4, "Set Turn Length", true);
+                dialog.setSize(275, 120);
+                
+                JPanel dialogPanel = new JPanel();
+                dialogPanel.setPreferredSize(new Dimension(200, 200));
+
+                JLabel label = new JLabel("Set the game's turn length (mm:ss)");
+                JTextField textField = new JTextField();
+                textField.setPreferredSize(new Dimension(100, 25));
+                dialogPanel.add(label);
+                dialogPanel.add(textField);
+                
+
+
+                JButton okButton = new JButton("OK");
+                okButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                    	boolean realisticTime = false;
+                        String inputTime = textField.getText().trim();
+                        // Assuming the input format is "minutes:seconds"
+                        String[] parts = inputTime.split(":");
+                        if (parts.length == 2) {
+                            try {
+
+                            	int minutes = Math.abs(Integer.parseInt(parts[0]));
+                                int seconds = Math.abs(Integer.parseInt(parts[1]));
+                                int totalTimeInSeconds = minutes * 60 + seconds;
+
+                                if (totalTimeInSeconds >= 5) {
+                                	realisticTime = true;
+                                	SystemPanel.allotedTurnTime = totalTimeInSeconds;
+                                } else {
+                                	label.setText("Please set the turn length to atleast 5s");
+                                }
+
+                            } catch (NumberFormatException ex) {
+                                // Handle parsing errors if input is not a valid number
+                                ex.printStackTrace();
+                            }
+                        }
+                        
+                        if (realisticTime) {
+                        	c4.gb.refreshBoard(false);
+                        	dialog.dispose();
+                        	
+                        }
+                        
+                    }
+                });
+
+                dialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        dialog.dispose();
+                    }
+                });
+                
+                dialogPanel.add(okButton);
+                dialog.add(dialogPanel);
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
+        });
+    
         
         resetBoardItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
-	        	if (Connect4.currentTurn == 02)
-	        		Connect4.playerMove();
-	        	
-	        	Connect4.gb.killBoard(false);
-	        	Connect4.gb.refreshBoard();
+	        	c4.gb.refreshBoard(false);
 	        }
 	    });    
         
         
         Omenu.add(resetBoardItem);
-        Omenu.add(OmenuItem1);
+        Omenu.add(setTurnItem);
         add(Omenu);
 
         // Language
@@ -131,20 +197,20 @@ public class MenuBar extends JMenuBar {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             String fileName = selectedFile.getName();
-            if (!Connect4.gb.isNewGame || Connect4.saveState) {
-            	Connect4.gb = new GameBoard(selectedFile);
+            if (!c4.gb.isNewGame || c4.saveState) {
+            	c4.gb = new GameBoard(c4, selectedFile);
             	
-            } else if (fileName.equals(Connect4.gb.getWorkingFile().getName())) {
+            } else if (fileName.equals(c4.gb.getWorkingFile().getName())) {
             	System.out.println("Not changing file.");
             
             } else {
-            	File oldFile = Connect4.gb.getWorkingFile();
-            	Connect4.gb = new GameBoard(selectedFile);
+            	File oldFile = c4.gb.getWorkingFile();
+            	c4.gb = new GameBoard(c4, selectedFile);
             	System.out.println("deleting: " + oldFile.getAbsolutePath());
             	oldFile.delete();
             	
             }
-            Connect4.gb.refreshBoard();
+            c4.gb.refreshBoard(false);
         }
 
     }

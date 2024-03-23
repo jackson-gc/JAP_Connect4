@@ -22,13 +22,12 @@ public class Connect4 extends JFrame implements ActionListener {
 	 * auto-generated serial uid
 	 */
 	private static final long serialVersionUID = 5369068481793381074L;
-	public static GameBoard gb = new GameBoard();
-	public static BoardPanel gbViewControl = new BoardPanel();
-	public static byte currentTurn = 01;
-	public static boolean saveState = false;
-	public static Connect4 connect4;
-	public static ControllableTimer timer = new ControllableTimer();
-	Panels panel;
+	boolean saveState = false;
+	public byte currentTurn = 01;
+	public ControllableTimer timer;
+	public BoardPanel gbViewControl;
+	private Panels panel;
+	public GameBoard gb;
 
 	/**
 	 * Connect4 Constructor
@@ -41,15 +40,20 @@ public class Connect4 extends JFrame implements ActionListener {
         setLocation(960, 540);
         
         
-
+        
+        gb = new GameBoard(this, null);
+        
+        gbViewControl = new BoardPanel(this);
 
         // Panels
-        panel = new Panels();
+        panel = new Panels(this);
         setContentPane(panel);
         
+        timer = new ControllableTimer(this.panel.sysPanel);
+        timer.start();
 
         // Menu bar
-        MenuBar menuBar = new MenuBar();
+        MenuBar menuBar = new MenuBar(this);
         setJMenuBar(menuBar);
 
         
@@ -68,7 +72,8 @@ public class Connect4 extends JFrame implements ActionListener {
         });
     }
     
-    public static byte playerMove() {
+    
+    public byte playerMove() {
     	byte temp = currentTurn;
     	
     	if (currentTurn == 01) {
@@ -101,7 +106,7 @@ public class Connect4 extends JFrame implements ActionListener {
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            connect4 = new Connect4();
+        	Connect4 connect4 = new Connect4();
             connect4.setVisible(true);
         });
     }

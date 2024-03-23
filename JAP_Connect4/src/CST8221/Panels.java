@@ -21,20 +21,24 @@ public class Panels extends JPanel {
 	 */
 	public static final String imgPath = Paths.get(".").toAbsolutePath().toString() + "\\imageLib\\";
 
-	public SystemPanel botRPanel;
-	protected ChatPanel bottomPanel;
+	public SystemPanel sysPanel;
+	protected ChatPanel chatPanel;
+
+	private Connect4 c4;
+	
 	/**
 	 * Panels Constructor
 	 */
-	public Panels() {
+	public Panels(Connect4 connect4) {
+		this.c4 = connect4;
         setLayout(new BorderLayout());
 
         // Adding panels from the Panels package
-        botRPanel = new SystemPanel();
-      	bottomPanel = new ChatPanel();
+        sysPanel = new SystemPanel(c4);
+      	chatPanel = new ChatPanel();
 
-        add(Connect4.gbViewControl, BorderLayout.WEST);
-        add(botRPanel, BorderLayout.EAST);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(c4.gbViewControl, BorderLayout.WEST);
+        add(sysPanel, BorderLayout.EAST);
+        add(chatPanel, BorderLayout.SOUTH);
     }
 }

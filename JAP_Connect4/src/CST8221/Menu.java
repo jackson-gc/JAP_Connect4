@@ -1,19 +1,16 @@
 package CST8221;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 /**
  * Menu class for window head
  */
@@ -44,7 +41,7 @@ public class Menu extends JFrame implements ActionListener {
 	/**
 	 * JPanel initial declaration
 	 */
-	JPanel panel;
+	ImagedPanel panel;
 	
 	/**
 	 * Menu constructor
@@ -54,43 +51,60 @@ public class Menu extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(500, 600));
-		setResizable(true);
+		setUndecorated(true);
+		setResizable(false);
 		
-		hostButton = new JButton("Host Game");
-		joinButton = new JButton("Join Game");
+//		hostButton = new JButton("Host Game");
+//		joinButton = new JButton("Join Game");
+//		
+//		
+//		joinButton.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				Connect4 mainpage = new Connect4();
+//				mainpage.setVisible(true);
+//				dispose();
+//			}
+//		});
+//		hostButton.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				Connect4 mainpage = new Connect4();
+//				mainpage.setVisible(true);
+//				dispose();
+//			}
+//		});
 		
 		
-		joinButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Connect4 mainpage = new Connect4();
-				mainpage.setVisible(true);
-				dispose();
-			}
-		});
-		hostButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Connect4 mainpage = new Connect4();
-				mainpage.setVisible(true);
-				dispose();
-			}
-		});
 		
+		panel = new ImagedPanel(Panels.imgPath + "Menu.png");
 		
+//		panel.add(hostButton);
+//		panel.add(joinButton);
 		
-		panel = new JPanel();
-		
-		panel.add(hostButton);
-		panel.add(joinButton);
-		
-		panel.setBackground(Color.RED);
 		add(panel);
 		
-	
+		
 		
 		
 		
 		pack();
 		setLocationRelativeTo(null);
+		
+		 // Show splash screen for 5 seconds
+        Timer timer = new Timer(1500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the game screen after 5 seconds
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        Connect4 mainpage = new Connect4();
+                        mainpage.setVisible(true);
+                        dispose();
+                    }
+                });
+            }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
 	}
 	
 	/**

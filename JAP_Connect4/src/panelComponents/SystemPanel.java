@@ -2,16 +2,20 @@ package panelComponents;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import CST8221.Connect4;
+import CST8221.ImagedPanel;
 import CST8221.Panels;
 
 /**
@@ -25,13 +29,16 @@ public class SystemPanel extends JPanel {
 	
 	public static JLabel redTurn;
 	public static JLabel yellowTurn;
-	private static JLabel turnTimeLeft = new JLabel();
+	public static JLabel turnTimeLeft = new JLabel();
 	public static int allotedTurnTime = 90;
 
+	private Connect4 c4;
+	
 	/**
 	 * RightPanel Constructor
 	 */
-	public SystemPanel() {
+	public SystemPanel(Connect4 connect4) {
+		this.c4 = connect4;
     	final Color panelBG = new Color(187, 212, 227);
     	final Color componentBG = new Color(201, 221, 237);
     	
@@ -53,12 +60,12 @@ public class SystemPanel extends JPanel {
         redTurn = new JLabel(new ImageIcon(Panels.imgPath + "redTurn.png"));
         redTurn.setPreferredSize(new Dimension(210,100));
         redTurn.setCursor(Cursor.getDefaultCursor());
-        redTurn.setEnabled(Connect4.currentTurn == 01);
+        redTurn.setEnabled(c4.currentTurn == 01);
         
         yellowTurn = new JLabel(new ImageIcon(Panels.imgPath + "yellowTurn.png"));
         yellowTurn.setPreferredSize(new Dimension(210,100));
         yellowTurn.setCursor(Cursor.getDefaultCursor());
-        yellowTurn.setEnabled(Connect4.currentTurn == 02);
+        yellowTurn.setEnabled(c4.currentTurn == 02);
 
         
         playerTurnDisplay.add(redTurnLabel);
@@ -104,9 +111,39 @@ public class SystemPanel extends JPanel {
 
     }
 	
-	public static void updateTimer(int timeElapsed) {
-		turnTimeLeft.setText("Time Left: " + (allotedTurnTime - timeElapsed));
-		System.out.println((allotedTurnTime - timeElapsed));
+	public void updateTimer(int timeElapsed) {
+		
+		if(timeElapsed == allotedTurnTime) {
+			c4.playerMove();
+			c4.timer.setStatus(2);
+			
+			JDialog dialog = new JDialog(c4, "Times Up!", Dialog.ModalityType.APPLICATION_MODAL);
+			dialog.setUndecorated(true);
+	        dialog.setSize(275, 120);
+	        dialog.setLocationRelativeTo(null);
+
+	        ImagedPanel panel = new ImagedPanel("");
+	        panel.setPreferredSize(new Dimension(200,200));
+	        
+	        
+	        
+	        
+	        
+	        dialog.add(panel);
+
+	        dialog.setVisible(true);
+	        dialog.dispose(); 
+	        
+			c4.timer.setStatus(3);
+			c4.timer.setStatus(1);
+		}
+		
+		
+		int totalSeconds = (allotedTurnTime - timeElapsed);
+		int minLeft = totalSeconds/60;
+		int secLeft = totalSeconds - (minLeft * 60);
+		String secLeftCorrected = (secLeft < 10) ? "0" + secLeft : String.valueOf(secLeft);
+		turnTimeLeft.setText("Time Left | " + minLeft + ":" + secLeftCorrected);
 
 	}
 	

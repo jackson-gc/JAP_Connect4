@@ -52,11 +52,12 @@ public class ControllableTimer extends Thread
     Constructor requires reference to a View class.
     You may need to edit it.  This is a reference to your class that displays the timer.
     */
+    private SystemPanel view;
     
-//    public ControllableTimer (View remoteView)
-//    {
-//        view = remoteView;
-//    }
+    public ControllableTimer (SystemPanel view) {
+    	this.view = view;
+    	view.updateTimer(0);      
+    }
 
     /**
     Method through which the timer is controlled.  Timer starts on by default.
@@ -75,12 +76,14 @@ public class ControllableTimer extends Thread
                 status=STOP;
                 break;
             case RESET:
+            	view.updateTimer(0);
                 elapsed=0;
                 break;
             case TERMINATE:
                 status=TERMINATE;
         }
     }
+    
     
     /**
     Permits checking the status of the timer. Mostly intended for internal use.
@@ -131,10 +134,9 @@ public class ControllableTimer extends Thread
                 @Override
                 public void run()
                 { 	//setTime method is part of your code.  Either modify this, or add an appropriate convenience method.
-                	SystemPanel.updateTimer(++elapsed);      
+                	view.updateTimer(++elapsed);
                 }
             }); //End EventQueue
-
         }
     }
 }

@@ -35,10 +35,13 @@ public class BoardPanel extends JPanel {
 	public JPanel boardGrid = null;
     private GridLayout gridLayout = new GridLayout(GameBoard.BOARD_ROWS, GameBoard.BOARD_COLS);
 	
+    private Connect4 c4;
+    
 	/**
 	 * LeftPanel class, panel container for the game board.
 	 */
-    public BoardPanel() {
+    public BoardPanel(Connect4 connect4) {
+    	this.c4 = connect4;
         setPreferredSize(new Dimension(1386, 100)); // Set the preferred size
        
         MatteBorder rightBoarder = new MatteBorder(0, 0, 0, 2, Color.GRAY);
@@ -54,7 +57,7 @@ public class BoardPanel extends JPanel {
             slot.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                	byte initalPlayer = Connect4.currentTurn;
+                	byte initalPlayer = c4.currentTurn;
                     // Get the source of the event (the clicked button)
                     JButton clickedButton = (JButton) e.getSource();
                     
@@ -64,59 +67,25 @@ public class BoardPanel extends JPanel {
                     
                     // Pass the row and column to a method to handle the click event
                     
-                    if(Connect4.gb.columnDepth[col] > 0) {
-                    	if (!Connect4.gbViewControl.dropInCol(col, Connect4.playerMove()))
+                    if(c4.gb.colCheck()[col] > 0) {
+                    	if (!c4.gbViewControl.dropInCol(col, c4.playerMove()))
                     		System.out.println("drop failed");
                     }
                     		
                     else
                     	System.out.println("Cannot add to this colum.");
                     
-                    Connect4.gb.printBoard();
+                    c4.gb.printBoard();
+                    c4.gb.checkWin(initalPlayer);
                     
+                    int totalDepth = 0;
+                    int[] tempColDepth = c4.gb.colCheck();
+                    for (int depth : tempColDepth) {
+                    	totalDepth += depth;
+                    }
                     
-                    if(Connect4.gb.checkWin(initalPlayer)) {
-                    	JDialog dialog = new JDialog(Connect4.connect4, "CONGRADULATIONS!", true);
-                    	dialog.setSize(275, 120);
-       
-                        
-                        JPanel jp = new JPanel();
-                        jp.setPreferredSize(new Dimension(200,200));
-                        
-                        JLabel label = null;
-                    	if (initalPlayer == 1) {
-                    		label = new JLabel("THE RED PLAYER HAS WON THE GAME");
-     
-                    	} else if (initalPlayer == 2) {
-                    		label = new JLabel("THE YELLOW PLAYER HAS WON THE GAME");
-                    		
-                    	}
-                    	
-                    	jp.add(label);
-                        JButton okButton = new JButton("OK");
-                        okButton.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                            	Connect4.gb.killBoard(false);
-                            	Connect4.gb.refreshBoard();
-                                dialog.dispose();
-                            }
-                        });
-                        
-                        dialog.addWindowListener(new WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent e) {
-                            	Connect4.gb.killBoard(false);
-                            	Connect4.gb.refreshBoard();
-                            	dialog.dispose();
-                            }
-                        });
-                        
-                        jp.add(okButton);
-                    	
-                    	dialog.add(jp);
-                        
-                        dialog.setVisible(true);
-                        
+                    if (totalDepth == 0) {
+                    	c4.gb.updateWinLoss((byte) 03);
                     }
                 }
             });
@@ -141,7 +110,7 @@ public class BoardPanel extends JPanel {
     }
     
     public boolean dropInCol(int column, byte tileType) {
-    	int floor = Connect4.gb.columnDepth[column];
+    	int floor = c4.gb.colCheck()[column];
     	if (floor == 0)
     		return false;
 
@@ -158,9 +127,10 @@ public class BoardPanel extends JPanel {
 //             }
     	}
     	int position[] = {floor - 1, column};
-        Connect4.gb.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
-        Connect4.gb.colCheck();
-    	Connect4.gb.updateWorkingFile();
+    	c4.gb.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
+    	c4.timer.setStatus(3);
+    	c4.gb.colCheck();
+    	c4.gb.updateWorkingFile();
     	return true;
     }
     
@@ -209,7 +179,7 @@ public class BoardPanel extends JPanel {
                 ImageIcon icon;
                 
                 
-                switch(Connect4.gb.tileList[i][j].getTileState()) {
+                switch(c4.gb.tileList[i][j].getTileState()) {
                 case 0:
                 	icon = new ImageIcon(Panels.imgPath + "boardTileEmpty.png");
                 	break;
