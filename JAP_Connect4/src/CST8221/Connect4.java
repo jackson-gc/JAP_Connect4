@@ -7,10 +7,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import controler.GameBoard;
+import model.GameBoard;
+import model.ControllableTimer;
 import panelComponents.BoardPanel;
 import panelComponents.SystemPanel;
 /**
@@ -27,6 +27,7 @@ public class Connect4 extends JFrame implements ActionListener {
 	public static byte currentTurn = 01;
 	public static boolean saveState = false;
 	public static Connect4 connect4;
+	public static ControllableTimer timer = new ControllableTimer();
 	Panels panel;
 
 	/**
@@ -38,15 +39,20 @@ public class Connect4 extends JFrame implements ActionListener {
         setPreferredSize(new Dimension(1920, 1080));
         setResizable(false);
         setLocation(960, 540);
+        
+        
+
 
         // Panels
         panel = new Panels();
         setContentPane(panel);
+        
 
         // Menu bar
         MenuBar menuBar = new MenuBar();
         setJMenuBar(menuBar);
 
+        
         pack();
         setLocationRelativeTo(null);
         

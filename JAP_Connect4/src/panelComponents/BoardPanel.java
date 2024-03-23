@@ -19,8 +19,8 @@ import javax.swing.border.MatteBorder;
 
 import CST8221.Connect4;
 import CST8221.Panels;
-import controler.GameBoard;
-import controler.GameBoardTile;
+import model.GameBoard;
+import model.GameBoardTile;
 
 public class BoardPanel extends JPanel {
 	/**

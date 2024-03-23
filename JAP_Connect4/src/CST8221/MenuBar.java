@@ -8,7 +8,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import controler.GameBoard;
+import model.GameBoard;
 import panelComponents.BoardPanel;
 /**
  * MenuBar component class
@@ -48,7 +48,18 @@ public class MenuBar extends JMenuBar {
 	        }
 	    });
 	    
-	    exitItem.addActionListener(e -> System.exit(0)); 
+	    exitItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            
+	        	Connect4.timer.start();
+	        	
+	        	
+	        	
+	        	
+	        }
+	    });
+	    //exitItem.addActionListener(e -> System.exit(0)); 
         
         add(fileMenu);
         

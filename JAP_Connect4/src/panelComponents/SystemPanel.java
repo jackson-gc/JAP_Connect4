@@ -25,6 +25,8 @@ public class SystemPanel extends JPanel {
 	
 	public static JLabel redTurn;
 	public static JLabel yellowTurn;
+	private static JLabel turnTimeLeft = new JLabel();
+	public static int allotedTurnTime = 90;
 
 	/**
 	 * RightPanel Constructor
@@ -70,8 +72,10 @@ public class SystemPanel extends JPanel {
         JPanel playerTimerDisplay = new JPanel();
         playerTimerDisplay.setPreferredSize(new Dimension(510, 80));
         playerTimerDisplay.setBackground(componentBG);
-
-        JLabel turnTimeLeft = new JLabel("<html>Time Left In Turn: <u>1:28<u/></html>");
+        
+        
+        
+        
         turnTimeLeft.setFont(turnTimeLeft.getFont().deriveFont(Font.BOLD, 24));	
         turnTimeLeft.setPreferredSize(new Dimension(400, 72));
         turnTimeLeft.setHorizontalAlignment(JLabel.CENTER);
@@ -99,4 +103,12 @@ public class SystemPanel extends JPanel {
         add(chatMoveBox);
 
     }
+	
+	public static void updateTimer(int timeElapsed) {
+		turnTimeLeft.setText("Time Left: " + (allotedTurnTime - timeElapsed));
+		System.out.println((allotedTurnTime - timeElapsed));
+
+	}
+	
+	
 }
