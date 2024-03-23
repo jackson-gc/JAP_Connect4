@@ -1,5 +1,6 @@
 package panelComponents;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dialog;
@@ -8,8 +9,8 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -114,28 +115,35 @@ public class SystemPanel extends JPanel {
 	public void updateTimer(int timeElapsed) {
 		
 		if(timeElapsed == allotedTurnTime) {
-			c4.playerMove();
-			c4.timer.setStatus(2);
 			
+			c4.timer.setStatus(2);
 			JDialog dialog = new JDialog(c4, "Times Up!", Dialog.ModalityType.APPLICATION_MODAL);
+			dialog.setLayout(new BorderLayout());
 			dialog.setUndecorated(true);
 	        dialog.setSize(275, 120);
 	        dialog.setLocationRelativeTo(null);
 
-	        ImagedPanel panel = new ImagedPanel("");
+	        ImagedPanel panel = new ImagedPanel((c4.currentTurn == 01) ? (Panels.imgPath + "redTimeUp.png") : (Panels.imgPath + "yellowTimeUp.png"));
+	        System.out.println(panel.toString());
+	        
 	        panel.setPreferredSize(new Dimension(200,200));
 	        
+	        JLabel label = new JLabel((c4.currentTurn == 01) ? "Red player's time is up." : "Yellow player's time is up." );
+	        label.setFont(new Font("Serif", Font.BOLD, 24));
 	        
+	        JButton okButton = new JButton("OK");
+	        okButton.addActionListener(e -> {	        	
+	        	dialog.dispose();
+		        c4.playerMove();
+				c4.timer.setStatus(1);
+				c4.timer.setStatus(3);
+	        });
 	        
-	        
-	        
-	        dialog.add(panel);
-
+	        panel.add(label);
+	        panel.add(okButton);
+	        dialog.add(panel, BorderLayout.CENTER);
 	        dialog.setVisible(true);
-	        dialog.dispose(); 
-	        
-			c4.timer.setStatus(3);
-			c4.timer.setStatus(1);
+	        timeElapsed = 0;
 		}
 		
 		

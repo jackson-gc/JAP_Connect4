@@ -9,8 +9,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import model.GameBoard;
 import model.ControllableTimer;
+import model.GameBoard;
 import panelComponents.BoardPanel;
 import panelComponents.SystemPanel;
 /**
@@ -26,8 +26,10 @@ public class Connect4 extends JFrame implements ActionListener {
 	public byte currentTurn = 01;
 	public ControllableTimer timer;
 	public BoardPanel gbViewControl;
+	public int[] score = {0,0};
 	private Panels panel;
 	public GameBoard gb;
+	private MenuBar menuBar;
 
 	/**
 	 * Connect4 Constructor
@@ -53,7 +55,7 @@ public class Connect4 extends JFrame implements ActionListener {
         timer.start();
 
         // Menu bar
-        MenuBar menuBar = new MenuBar(this);
+        menuBar = new MenuBar(this);
         setJMenuBar(menuBar);
 
         
@@ -97,6 +99,11 @@ public class Connect4 extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
     }
+    
+    public void updateScoreItem() {
+    	menuBar.scoreDisplayItem.setText("Current score: " + score[0] + "-" + score[1]);
+    }
+    
     
 
     /**

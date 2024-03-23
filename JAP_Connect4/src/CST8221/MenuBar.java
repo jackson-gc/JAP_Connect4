@@ -1,5 +1,6 @@
 package CST8221;
 import java.awt.Dimension;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -30,6 +31,8 @@ public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1019707613887489945L;
 
 	private Connect4 c4;
+	
+	protected JMenuItem scoreDisplayItem;
 	
 	/**
 	 * MenuBar Constructor
@@ -78,12 +81,20 @@ public class MenuBar extends JMenuBar {
 
         // Score
         JMenu Smenu = new JMenu("Score");
-        JMenuItem SmenuItem = new JMenuItem("<html>Current score: <u>2-3</u></html>");
-        JMenuItem SmenuItem1 = new JMenuItem("Reset score");
-        JMenuItem SmenuItem2 = new JMenuItem("Score history");
-        Smenu.add(SmenuItem);
-        Smenu.add(SmenuItem1);
-        Smenu.add(SmenuItem2);
+        System.out.println("building score: " + c4.score[0] + "-" + c4.score[1]);
+        scoreDisplayItem = new JMenuItem("Current score: " + c4.score[0] + "-" + c4.score[1]);
+        JMenuItem resetScoreItem = new JMenuItem("Reset score");
+
+        resetScoreItem.addActionListener(e -> {
+            c4.score[0] = 0;
+            c4.score[1] = 0;
+            c4.updateScoreItem();
+            c4.gb.updateWorkingFile();
+        });
+        
+        
+        Smenu.add(scoreDisplayItem);
+        Smenu.add(resetScoreItem);
         add(Smenu);
 
         // Options
@@ -214,5 +225,6 @@ public class MenuBar extends JMenuBar {
         }
 
     }
+    
      	
 }

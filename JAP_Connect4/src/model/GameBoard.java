@@ -178,12 +178,15 @@ public class GameBoard {
         
         switch(winState) {
         case 01:
-        	
-        	label = new JLabel("THE RED PLAYER HAS WON THE GAME");
+        	label = new JLabel("The RED Player Has Won The Game");
+        	c4.score[0]++;
+        	c4.updateScoreItem();
         	break;
         	
         case 02:
-        	label = new JLabel("THE YELLOW PLAYER HAS WON THE GAME");
+        	label = new JLabel("The YELLOW Player Has Won The Game");
+        	c4.score[1]++;
+        	c4.updateScoreItem();
         	break;
         	
         case 03:

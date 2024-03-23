@@ -18,11 +18,16 @@ public class ImagedPanel extends JPanel {
 	public ImagedPanel(String path) {
 	this.path = path;
 	}
-
+	
+	@Override
+	public String toString() {
+		return path;
+	}
+	
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Paint the background image	
-        g.drawImage(new ImageIcon(this.path).getImage(), 0, 0, getWidth(), getHeight(), this);
+        g.drawImage(new ImageIcon(path).getImage(), 0, 0, getWidth(), getHeight(), this);
         }
 	}
