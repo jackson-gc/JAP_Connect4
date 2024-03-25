@@ -47,13 +47,13 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
 	public MenuBar(Connect4 connect4) {
 		this.c4 = connect4;
 		LocaleManager.addLocaleChangeListener(this);
-		localeChanged(LocaleManager.getCurrentLocale());
+		localeChanged(new Locale("en", "US"));
 	}
 
 		
 		
 	public void localeChanged(Locale newLocale) {
-		c4.messages = ResourceBundle.getBundle("message", newLocale);
+		LocaleManager.messages = ResourceBundle.getBundle("message", newLocale);
 		initializeMenu();
 	}
 		
@@ -61,10 +61,10 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
 	private void initializeMenu() {
 	
         // File
-		fileMenu = new JMenu(c4.messages.getString("file"));
-	    exitItem = new JMenuItem(c4.messages.getString("exit"));
-	    loadItem = new JMenuItem(c4.messages.getString("load"));
-	    saveItem = new JMenuItem(c4.messages.getString("save"));
+		fileMenu = new JMenu(LocaleManager.messages.getString("file"));
+	    exitItem = new JMenuItem(LocaleManager.messages.getString("exit"));
+	    loadItem = new JMenuItem(LocaleManager.messages.getString("load"));
+	    saveItem = new JMenuItem(LocaleManager.messages.getString("save"));
 	    fileMenu.add(saveItem);
 	    fileMenu.add(loadItem);
 	    fileMenu.add(exitItem);
@@ -91,19 +91,19 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         
 
         // Connection
-        Cmenu = new JMenu(c4.messages.getString("connectionMenu"));
-        CmenuItem = new JMenuItem(c4.messages.getString("host"));
-        CmenuItem1 = new JMenuItem(c4.messages.getString("join"));
-        CmenuItem2 = new JMenuItem(c4.messages.getString("close"));
+        Cmenu = new JMenu(LocaleManager.messages.getString("connectionMenu"));
+        CmenuItem = new JMenuItem(LocaleManager.messages.getString("host"));
+        CmenuItem1 = new JMenuItem(LocaleManager.messages.getString("join"));
+        CmenuItem2 = new JMenuItem(LocaleManager.messages.getString("close"));
         Cmenu.add(CmenuItem);
         Cmenu.add(CmenuItem1);
         Cmenu.add(CmenuItem2);
         add(Cmenu);
 
         // Score
-        Smenu = new JMenu(c4.messages.getString("scoreMenu"));
-        scoreDisplayItem = new JMenuItem(c4.messages.getString("current") + c4.score[0] + "-" + c4.score[1]);
-        resetScoreItem = new JMenuItem(c4.messages.getString("resetScore"));
+        Smenu = new JMenu(LocaleManager.messages.getString("scoreMenu"));
+        scoreDisplayItem = new JMenuItem(LocaleManager.messages.getString("current") + c4.score[0] + "-" + c4.score[1]);
+        resetScoreItem = new JMenuItem(LocaleManager.messages.getString("resetScore"));
         Smenu.add(scoreDisplayItem);
         Smenu.add(resetScoreItem);
 
@@ -120,9 +120,9 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         add(Smenu);
 
         // Options
-        Omenu = new JMenu(c4.messages.getString("optionsMenu"));
-        resetBoardItem = new JMenuItem(c4.messages.getString("resetBoard"));
-        setTurnItem = new JMenuItem(c4.messages.getString("gameLength"));
+        Omenu = new JMenu(LocaleManager.messages.getString("optionsMenu"));
+        resetBoardItem = new JMenuItem(LocaleManager.messages.getString("resetBoard"));
+        setTurnItem = new JMenuItem(LocaleManager.messages.getString("gameLength"));
         
         setTurnItem.addActionListener(new ActionListener() {
             @Override
@@ -206,9 +206,9 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         add(Omenu);
 
         // Language
-        Lmenu = new JMenu(c4.messages.getString("languageMenu"));
-        LmenuItem = new JMenuItem(c4.messages.getString("english"));
-        LmenuItem1 = new JMenuItem(c4.messages.getString("french"));
+        Lmenu = new JMenu(LocaleManager.messages.getString("languageMenu"));
+        LmenuItem = new JMenuItem(LocaleManager.messages.getString("english"));
+        LmenuItem1 = new JMenuItem(LocaleManager.messages.getString("french"));
         Lmenu.add(LmenuItem);
         Lmenu.add(LmenuItem1);
         add(Lmenu);
@@ -219,9 +219,9 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         
 
         // Help
-        Hmenu = new JMenu(c4.messages.getString("helpMenu"));
-        HmenuItem = new JMenuItem(c4.messages.getString("helpPage"));
-        HmenuItem1 = new JMenuItem(c4.messages.getString("aboutPage"));
+        Hmenu = new JMenu(LocaleManager.messages.getString("helpMenu"));
+        HmenuItem = new JMenuItem(LocaleManager.messages.getString("helpPage"));
+        HmenuItem1 = new JMenuItem(LocaleManager.messages.getString("aboutPage"));
         Hmenu.add(HmenuItem);
         Hmenu.add(HmenuItem1);
         add(Hmenu);

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
 import CST8221.Connect4;
+import CST8221.LocaleManager;
 import CST8221.Panels;
 import model.GameBoard;
 import model.GameBoardTile;
@@ -197,7 +198,7 @@ public class BoardPanel extends JPanel {
     }
     
     public void updateLanguage(Locale locale) {
-    	c4.messages = ResourceBundle.getBundle("message", locale);
+    	LocaleManager.messages = ResourceBundle.getBundle("message", locale);
     }
 }
 

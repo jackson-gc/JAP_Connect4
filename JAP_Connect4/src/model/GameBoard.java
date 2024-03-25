@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import CST8221.Connect4;
+import CST8221.LocaleManager;
 import panelComponents.BoardPanel;
 import panelComponents.SystemPanel;
 
@@ -27,7 +28,7 @@ public class GameBoard {
 	public static final int BOARD_COLS = 7;
 	public GameBoardTile[][] tileList = new GameBoardTile[BOARD_ROWS][BOARD_COLS];
 	private int[] columnDepth = {BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS, BOARD_ROWS};
-	private final String path = "saves\\";
+	private final String path = "..\\saves\\";
 	private File workingFile;
 	public byte winState; 
 	public boolean isNewGame;
@@ -61,9 +62,9 @@ public class GameBoard {
 			
 			
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, c4.messages.getString("errorFileNotFound"));
+			JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("errorFileNotFound"));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, c4.messages.getString("errorIO"));
+			JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("errorIO"));
 		}
 		
 		
@@ -287,10 +288,10 @@ public class GameBoard {
 		    		        c4.score[1] = yellowScore;
 		    		        
 		    		    } catch (NumberFormatException e) {
-		    		    	 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
+		    		    	 JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("warningSaveStateCorrupted"));
 		    		    }
 		    		} else {
-		    			 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
+		    			 JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("warningSaveStateCorrupted"));
 		    		}
 		    		c4.updateScoreItem();
 		    		break;
@@ -302,7 +303,7 @@ public class GameBoard {
 		    			
 		    			
 	    		    } catch (NumberFormatException e) {
-	    		    	 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
+	    		    	 JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("warningSaveStateCorrupted"));
 	    		        
 	    		    }
 		    		break;
@@ -316,7 +317,7 @@ public class GameBoard {
 		    	case GAME_BOARD_LINE:
 			        while (trk.hasNextInt()) {
 			        	if (currentTiles > BOARD_ROWS * BOARD_COLS) {
-			        		 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
+			        		 JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("warningSaveStateCorrupted"));
 			        		return false;
 			        	}
 			        	currentTiles++;
@@ -329,7 +330,7 @@ public class GameBoard {
 			        	
 			        	int num = trk.nextInt();
 			        	if (num > 2 || num < 0) {
-			        		 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
+			        		 JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("warningSaveStateCorrupted"));
 			        		num = 0;
 			        	}
 			        	
