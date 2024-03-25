@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import javax.swing.JPanel;
 
 import panelComponents.ChatPanel;
-import panelComponents.BoardPanel;
 import panelComponents.SystemPanel;
 
 /**

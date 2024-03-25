@@ -11,8 +11,6 @@ package model;
 
 import java.awt.EventQueue;
 
-import javax.swing.text.View;
-
 import panelComponents.SystemPanel;
 
 /**

@@ -7,12 +7,11 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
@@ -66,14 +65,10 @@ public class BoardPanel extends JPanel {
                     int col = index % GameBoard.BOARD_COLS;
                     
                     // Pass the row and column to a method to handle the click event
-                    
-                    if(c4.gb.colCheck()[col] > 0) {
-                    	if (!c4.gbViewControl.dropInCol(col, c4.playerMove()))
-                    		System.out.println("drop failed");
-                    }
-                    		
-                    else
-                    	System.out.println("Cannot add to this colum.");
+                   
+                    if(c4.gb.colCheck()[col] > 0)
+                    	c4.gbViewControl.dropInCol(col, c4.playerMove());
+
                     
                     c4.gb.printBoard();
                     c4.gb.checkWin(initalPlayer);
@@ -199,6 +194,10 @@ public class BoardPanel extends JPanel {
                 boardGrid.add(jl);
             }
         }
+    }
+    
+    public void updateLanguage(Locale locale) {
+    	c4.messages = ResourceBundle.getBundle("message", locale);
     }
 }
 

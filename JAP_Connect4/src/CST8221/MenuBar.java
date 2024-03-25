@@ -1,13 +1,12 @@
 package CST8221;
 import java.awt.Dimension;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,7 +23,7 @@ import panelComponents.SystemPanel;
 /**
  * MenuBar component class
  */
-public class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListener {
     /**
 	 * auto-generated serial uid
 	 */
@@ -33,17 +32,39 @@ public class MenuBar extends JMenuBar {
 	private Connect4 c4;
 	
 	protected JMenuItem scoreDisplayItem;
+
+	// private JMenu and JMenuItem variables
+	private JMenu fileMenu, Cmenu, Smenu, Omenu, Lmenu, Hmenu;
+	private JMenuItem exitItem, loadItem, saveItem, CmenuItem, CmenuItem1,
+	CmenuItem2, resetScoreItem, setTurnItem, resetBoardItem,
+	LmenuItem,LmenuItem1, HmenuItem, HmenuItem1; 
+	
+	JDialog dialog;
 	
 	/**
 	 * MenuBar Constructor
 	 */
 	public MenuBar(Connect4 connect4) {
 		this.c4 = connect4;
+		LocaleManager.addLocaleChangeListener(this);
+		localeChanged(LocaleManager.getCurrentLocale());
+	}
+
+		
+		
+	public void localeChanged(Locale newLocale) {
+		c4.messages = ResourceBundle.getBundle("message", newLocale);
+		initializeMenu();
+	}
+		
+	
+	private void initializeMenu() {
+	
         // File
-		JMenu fileMenu = new JMenu("File");
-	    JMenuItem exitItem = new JMenuItem("Exit");
-	    JMenuItem loadItem = new JMenuItem("Load");
-	    JMenuItem saveItem = new JMenuItem("Save");
+		fileMenu = new JMenu(c4.messages.getString("file"));
+	    exitItem = new JMenuItem(c4.messages.getString("exit"));
+	    loadItem = new JMenuItem(c4.messages.getString("load"));
+	    saveItem = new JMenuItem(c4.messages.getString("save"));
 	    fileMenu.add(saveItem);
 	    fileMenu.add(loadItem);
 	    fileMenu.add(exitItem);
@@ -70,20 +91,21 @@ public class MenuBar extends JMenuBar {
         
 
         // Connection
-        JMenu Cmenu = new JMenu("Connection");
-        JMenuItem CmenuItem = new JMenuItem("Host");
-        JMenuItem CmenuItem1 = new JMenuItem("Join");
-        JMenuItem CmenuItem2 = new JMenuItem("Close");
+        Cmenu = new JMenu(c4.messages.getString("connectionMenu"));
+        CmenuItem = new JMenuItem(c4.messages.getString("host"));
+        CmenuItem1 = new JMenuItem(c4.messages.getString("join"));
+        CmenuItem2 = new JMenuItem(c4.messages.getString("close"));
         Cmenu.add(CmenuItem);
         Cmenu.add(CmenuItem1);
         Cmenu.add(CmenuItem2);
         add(Cmenu);
 
         // Score
-        JMenu Smenu = new JMenu("Score");
-        System.out.println("building score: " + c4.score[0] + "-" + c4.score[1]);
-        scoreDisplayItem = new JMenuItem("Current score: " + c4.score[0] + "-" + c4.score[1]);
-        JMenuItem resetScoreItem = new JMenuItem("Reset score");
+        Smenu = new JMenu(c4.messages.getString("scoreMenu"));
+        scoreDisplayItem = new JMenuItem(c4.messages.getString("current") + c4.score[0] + "-" + c4.score[1]);
+        resetScoreItem = new JMenuItem(c4.messages.getString("resetScore"));
+        Smenu.add(scoreDisplayItem);
+        Smenu.add(resetScoreItem);
 
         resetScoreItem.addActionListener(e -> {
             c4.score[0] = 0;
@@ -98,15 +120,15 @@ public class MenuBar extends JMenuBar {
         add(Smenu);
 
         // Options
-        JMenu Omenu = new JMenu("Game Options");
-        JMenuItem resetBoardItem = new JMenuItem("Reset board");
-        JMenuItem setTurnItem = new JMenuItem("Set Turn Length");
+        Omenu = new JMenu(c4.messages.getString("optionsMenu"));
+        resetBoardItem = new JMenuItem(c4.messages.getString("resetBoard"));
+        setTurnItem = new JMenuItem(c4.messages.getString("gameLength"));
         
         setTurnItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 c4.timer.setStatus(0);
-                JDialog dialog = new JDialog(c4, "Set Turn Length", true);
+                dialog = new JDialog(c4, "Set Turn Length", true);
                 dialog.setSize(275, 120);
                 
                 JPanel dialogPanel = new JPanel();
@@ -184,20 +206,28 @@ public class MenuBar extends JMenuBar {
         add(Omenu);
 
         // Language
-        JMenu Lmenu = new JMenu("Language");
-        JMenuItem LmenuItem = new JMenuItem("English");
-        JMenuItem LmenuItem1 = new JMenuItem("French");
+        Lmenu = new JMenu(c4.messages.getString("languageMenu"));
+        LmenuItem = new JMenuItem(c4.messages.getString("english"));
+        LmenuItem1 = new JMenuItem(c4.messages.getString("french"));
         Lmenu.add(LmenuItem);
         Lmenu.add(LmenuItem1);
         add(Lmenu);
+        
+        // action listener for chaning languages between french and english
+        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("en", "US")));
+        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("fr", "FR")));
+        
 
         // Help
-        JMenu Hmenu = new JMenu("Help");
-        JMenuItem HmenuItem = new JMenuItem("See help page");
-        JMenuItem HmenuItem1 = new JMenuItem("See about page");
+        Hmenu = new JMenu(c4.messages.getString("helpMenu"));
+        HmenuItem = new JMenuItem(c4.messages.getString("helpPage"));
+        HmenuItem1 = new JMenuItem(c4.messages.getString("aboutPage"));
         Hmenu.add(HmenuItem);
         Hmenu.add(HmenuItem1);
         add(Hmenu);
+        
+        revalidate();
+        repaint();
     }
 	
 	
@@ -226,5 +256,37 @@ public class MenuBar extends JMenuBar {
 
     }
     
-     	
+    //calls all the set text in the message files for each variable
+//    private void changeLanguage(Locale locale) {
+//    	Locale.setDefault(locale);
+//    	message = ResourceBundle.getBundle("message", locale);
+//    	
+//    	fileMenu.setText(message.getString("file"));
+//    	exitItem.setText(message.getString("exit"));
+//    	loadItem.setText(message.getString("open"));
+//    	saveItem.setText(message.getString("save"));
+//    	
+//    	Cmenu.setText(message.getString("connectionMenu"));
+//    	CmenuItem.setText(message.getString("host"));
+//    	CmenuItem1.setText(message.getString("join"));
+//    	CmenuItem2.setText(message.getString("close"));
+//    	
+//    	Smenu.setText(message.getString("scoreMenu"));
+//    	scoreDisplayItem.setText(message.getString("current"));
+//    	resetScoreItem.setText(message.getString("resetScore"));
+//
+//    	Omenu.setText(message.getString("optionsMenu"));
+//    	resetBoardItem.setText(message.getString("resetBoard"));
+//    	setTurnItem.setText(message.getString("gameLength"));
+//    	
+//    	Lmenu.setText(message.getString("languageMenu"));
+//    	LmenuItem.setText(message.getString("english"));
+//    	LmenuItem1.setText(message.getString("french"));
+//    	
+//    	Hmenu.setText(message.getString("helpMenu"));
+//    	HmenuItem.setText(message.getString("helpPage"));
+//    	HmenuItem1.setText(message.getString("aboutPage"));
+//    	
+//    	//notifyLanguageChange(locale);
+//    }   	
 }

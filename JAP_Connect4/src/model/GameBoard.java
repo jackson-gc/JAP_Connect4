@@ -14,8 +14,8 @@ import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import CST8221.Connect4;
@@ -61,11 +61,9 @@ public class GameBoard {
 			
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, c4.messages.getString("errorFileNotFound"));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, c4.messages.getString("errorIO"));
 		}
 		
 		
@@ -105,7 +103,6 @@ public class GameBoard {
 		} else {
 			isNewGame = false;
 			loadGame(gameFile);
-			System.out.println("Player turn out: " + c4.currentTurn);
 		}		
 	}
 	
@@ -251,6 +248,7 @@ public class GameBoard {
 	
 	public boolean loadGame(File file) {
 		this.workingFile = file;
+		
 		int lineTrack = 0;
 	    try (Scanner trk = new Scanner(file)){
 	    	int currentTiles = 0;
@@ -289,10 +287,10 @@ public class GameBoard {
 		    		        c4.score[1] = yellowScore;
 		    		        
 		    		    } catch (NumberFormatException e) {
-		    		        System.out.println("Error parsing integers from the scoreLine string.");
+		    		    	 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
 		    		    }
 		    		} else {
-		    		    System.out.println("Error in File: score line in file may be corrupt.");
+		    			 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
 		    		}
 		    		c4.updateScoreItem();
 		    		break;
@@ -304,7 +302,7 @@ public class GameBoard {
 		    			
 		    			
 	    		    } catch (NumberFormatException e) {
-	    		        System.out.println("Error parsing integers from the turnLengthLine string.");
+	    		    	 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
 	    		        
 	    		    }
 		    		break;
@@ -314,12 +312,11 @@ public class GameBoard {
 		    			c4.playerMove();
 		    		}
 		    		
-		    		System.out.println("Player turn in: " + c4.currentTurn);
 		    		break;
 		    	case GAME_BOARD_LINE:
 			        while (trk.hasNextInt()) {
 			        	if (currentTiles > BOARD_ROWS * BOARD_COLS) {
-			        		System.out.println("Error: Save state could not be loaded.");
+			        		 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
 			        		return false;
 			        	}
 			        	currentTiles++;
@@ -332,7 +329,7 @@ public class GameBoard {
 			        	
 			        	int num = trk.nextInt();
 			        	if (num > 2 || num < 0) {
-			        		System.out.println("Warning: Save state may be corrupted.");
+			        		 JOptionPane.showMessageDialog(null, c4.messages.getString("warningSaveStateCorrupted"));
 			        		num = 0;
 			        	}
 			        	

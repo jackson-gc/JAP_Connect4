@@ -90,7 +90,7 @@ public class Menu extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		
 		 // Show splash screen for 5 seconds
-        Timer timer = new Timer(1500, new ActionListener() {
+        Timer timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Open the game screen after 5 seconds
