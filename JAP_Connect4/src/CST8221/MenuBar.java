@@ -148,7 +148,7 @@ public class MenuBar extends JMenuBar {
                         }
                         
                         if (realisticTime) {
-                        	c4.gb.refreshBoard(false);
+                        	c4.gb.refreshBoard(false, true, true);
                         	dialog.dispose();
                         	
                         }
@@ -174,7 +174,7 @@ public class MenuBar extends JMenuBar {
         resetBoardItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
-	        	c4.gb.refreshBoard(false);
+	        	c4.gb.refreshBoard(false, true, true);
 	        }
 	    });    
         
@@ -221,7 +221,7 @@ public class MenuBar extends JMenuBar {
             	oldFile.delete();
             	
             }
-            c4.gb.refreshBoard(false);
+            c4.gb.refreshBoard(false, false, false);
         }
 
     }

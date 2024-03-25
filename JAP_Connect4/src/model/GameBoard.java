@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 
 import CST8221.Connect4;
 import panelComponents.BoardPanel;
+import panelComponents.SystemPanel;
 
 public class GameBoard {
 	public static final int BOARD_ROWS = 6;
@@ -41,6 +42,9 @@ public class GameBoard {
 	public boolean updateWorkingFile() {
 		int lnTrack = 0;
 		try (FileWriter fw = new FileWriter(this.workingFile)){
+			fw.append(c4.score[0] + "-" + c4.score[1] + "\n");
+			fw.append(SystemPanel.allotedTurnTime + "\n");
+			fw.append(c4.currentTurn + "\n");
 			for (GameBoardTile[] tileRow : tileList) {
 				for (GameBoardTile tile : tileRow) {
 					lnTrack++;
@@ -101,6 +105,7 @@ public class GameBoard {
 		} else {
 			isNewGame = false;
 			loadGame(gameFile);
+			System.out.println("Player turn out: " + c4.currentTurn);
 		}		
 	}
 	
@@ -204,7 +209,7 @@ public class GameBoard {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	c4.gb.refreshBoard(false);
+            	c4.gb.refreshBoard(false, true, true);
             	dialog.dispose();
             }
         });
@@ -212,7 +217,7 @@ public class GameBoard {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            	c4.gb.refreshBoard(false);
+            	c4.gb.refreshBoard(false, true, true);
             	dialog.dispose();
             }
         });
@@ -246,38 +251,104 @@ public class GameBoard {
 	
 	public boolean loadGame(File file) {
 		this.workingFile = file;
+		int lineTrack = 0;
 	    try (Scanner trk = new Scanner(file)){
 	    	int currentTiles = 0;
 	    	int row = -1;
 	    	int col = 0;
 	    	
 	    	
-	        while (trk.hasNextInt()) {
-	        	if (currentTiles > BOARD_ROWS * BOARD_COLS) {
-	        		System.out.println("Error: Save state could not be loaded.");
-	        		return false;
-	        	}
-	        	currentTiles++;
+	    	while (trk.hasNextLine()) {
+	    		final int SCORE_LINE = 1;
+	    		final int TURN_LENGTH_LINE = 2;
+	    		final int CURRENT_TURN_LINE = 3;
+	    		final int GAME_BOARD_LINE = 4;
 
-	        	if (col % BOARD_COLS == 0) {
-	        		row++;
-	        		col = 0;
-	        	}
+	    		
+	    		
+	    		
+	    		lineTrack++;
+	    		
+	    		
+	    		
+	    		
+		    	// check line arg
+		    	switch (lineTrack) {
+		    		
+		    	case SCORE_LINE:
+		    		String scoreLine = trk.nextLine();
+		    		String[] parts = scoreLine.split("-");
 
-	        	
-	        	int num = trk.nextInt();
-	        	if (num > 2 || num < 0) {
-	        		System.out.println("Warning: Save state may be corrupted.");
-	        		num = 0;
-	        	}
-	        	
-	     
-            	int[] position = {row, col};
-            	tileList[row][col] = new GameBoardTile((byte) num, position);
-            	
-            	
-	        	col++;
-	        }
+		    		if (parts.length == 2) {
+		    		    try {
+		    		        int redScore = Integer.parseInt(parts[0].trim());
+		    		        int yellowScore = Integer.parseInt(parts[1].trim());
+		    		        
+		    		        
+		    		        c4.score[0] = redScore;
+		    		        c4.score[1] = yellowScore;
+		    		        
+		    		    } catch (NumberFormatException e) {
+		    		        System.out.println("Error parsing integers from the scoreLine string.");
+		    		    }
+		    		} else {
+		    		    System.out.println("Error in File: score line in file may be corrupt.");
+		    		}
+		    		c4.updateScoreItem();
+		    		break;
+		    	case TURN_LENGTH_LINE:
+		    		String turnLengthLine = trk.nextLine();
+		    		try {
+		    			SystemPanel.allotedTurnTime = Integer.parseInt(turnLengthLine);
+		    			c4.timer.setStatus(3);
+		    			
+		    			
+	    		    } catch (NumberFormatException e) {
+	    		        System.out.println("Error parsing integers from the turnLengthLine string.");
+	    		        
+	    		    }
+		    		break;
+		    	case CURRENT_TURN_LINE:
+		    		String currentTurnLine = trk.nextLine();
+		    		if (c4.currentTurn != (byte) Integer.parseInt(currentTurnLine)) {
+		    			c4.playerMove();
+		    		}
+		    		
+		    		System.out.println("Player turn in: " + c4.currentTurn);
+		    		break;
+		    	case GAME_BOARD_LINE:
+			        while (trk.hasNextInt()) {
+			        	if (currentTiles > BOARD_ROWS * BOARD_COLS) {
+			        		System.out.println("Error: Save state could not be loaded.");
+			        		return false;
+			        	}
+			        	currentTiles++;
+
+			        	if (col % BOARD_COLS == 0) {
+			        		row++;
+			        		col = 0;
+			        	}
+
+			        	
+			        	int num = trk.nextInt();
+			        	if (num > 2 || num < 0) {
+			        		System.out.println("Warning: Save state may be corrupted.");
+			        		num = 0;
+			        	}
+			        	
+			     
+		            	int[] position = {row, col};
+		            	tileList[row][col] = new GameBoardTile((byte) num, position);
+		            	
+		            	
+			        	col++;
+			        }
+		    		break;
+		    	default:
+		    		System.out.println(trk.nextLine());
+		    	}
+		    	refreshBoard(false, false, false);
+	    	}
 	        trk.close();
 	    } catch (FileNotFoundException e) {
 	        e.printStackTrace();
@@ -319,15 +390,18 @@ public class GameBoard {
 		colCheck();
 	}
     
-    public void refreshBoard(boolean closeWindow) {
-    	if (c4.currentTurn == 02)
-    		c4.playerMove();
-    	
+    public void refreshBoard(boolean closeWindow, boolean killBoard, boolean updateTurn) {
+    	if (updateTurn) {
+    		if (c4.currentTurn == 02)
+    			c4.playerMove();    		
+    	}
     	
     	c4.timer.setStatus(3);
     	c4.timer.setStatus(1);
     	
-    	killBoard(closeWindow);
+    	if (killBoard)
+    		killBoard(closeWindow);
+    	
         // Recreate the BoardPanel and add it to the container
         BoardPanel newBoardPanel = new BoardPanel(c4);
         c4.remove(c4.gbViewControl); // Remove the old BoardPanel
