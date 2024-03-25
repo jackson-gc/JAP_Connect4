@@ -214,9 +214,19 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         add(Lmenu);
         
         // action listener for chaning languages between french and english
-        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("en", "US")));
-        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("fr", "FR")));
-        
+        LmenuItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	        	changeLanguage(new Locale("en", "US"));
+	        }
+	    });
+	    
+        LmenuItem1.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	        	changeLanguage(new Locale("fr", "FR"));
+	        }
+	    });
 
         // Help
         Hmenu = new JMenu(LocaleManager.messages.getString("helpMenu"));
@@ -233,7 +243,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
 	
     private void openFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(".\\saves"));
+        fileChooser.setCurrentDirectory(new File("..\\saves"));
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -257,36 +267,36 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
     }
     
     //calls all the set text in the message files for each variable
-//    private void changeLanguage(Locale locale) {
-//    	Locale.setDefault(locale);
-//    	message = ResourceBundle.getBundle("message", locale);
-//    	
-//    	fileMenu.setText(message.getString("file"));
-//    	exitItem.setText(message.getString("exit"));
-//    	loadItem.setText(message.getString("open"));
-//    	saveItem.setText(message.getString("save"));
-//    	
-//    	Cmenu.setText(message.getString("connectionMenu"));
-//    	CmenuItem.setText(message.getString("host"));
-//    	CmenuItem1.setText(message.getString("join"));
-//    	CmenuItem2.setText(message.getString("close"));
-//    	
-//    	Smenu.setText(message.getString("scoreMenu"));
-//    	scoreDisplayItem.setText(message.getString("current"));
-//    	resetScoreItem.setText(message.getString("resetScore"));
-//
-//    	Omenu.setText(message.getString("optionsMenu"));
-//    	resetBoardItem.setText(message.getString("resetBoard"));
-//    	setTurnItem.setText(message.getString("gameLength"));
-//    	
-//    	Lmenu.setText(message.getString("languageMenu"));
-//    	LmenuItem.setText(message.getString("english"));
-//    	LmenuItem1.setText(message.getString("french"));
-//    	
-//    	Hmenu.setText(message.getString("helpMenu"));
-//    	HmenuItem.setText(message.getString("helpPage"));
-//    	HmenuItem1.setText(message.getString("aboutPage"));
-//    	
-//    	//notifyLanguageChange(locale);
-//    }   	
+    private void changeLanguage(Locale locale) {
+    	Locale.setDefault(locale);
+    	LocaleManager.messages = ResourceBundle.getBundle("message", locale);
+    	
+    	fileMenu.setText(LocaleManager.messages.getString("file"));
+    	exitItem.setText(LocaleManager.messages.getString("exit"));
+    	loadItem.setText(LocaleManager.messages.getString("open"));
+    	saveItem.setText(LocaleManager.messages.getString("save"));
+    	
+    	Cmenu.setText(LocaleManager.messages.getString("connectionMenu"));
+    	CmenuItem.setText(LocaleManager.messages.getString("host"));
+    	CmenuItem1.setText(LocaleManager.messages.getString("join"));
+    	CmenuItem2.setText(LocaleManager.messages.getString("close"));
+    	
+    	Smenu.setText(LocaleManager.messages.getString("scoreMenu"));
+    	scoreDisplayItem.setText(LocaleManager.messages.getString("current"));
+    	resetScoreItem.setText(LocaleManager.messages.getString("resetScore"));
+
+    	Omenu.setText(LocaleManager.messages.getString("optionsMenu"));
+    	resetBoardItem.setText(LocaleManager.messages.getString("resetBoard"));
+    	setTurnItem.setText(LocaleManager.messages.getString("gameLength"));
+    	
+    	Lmenu.setText(LocaleManager.messages.getString("languageMenu"));
+    	LmenuItem.setText(LocaleManager.messages.getString("english"));
+    	LmenuItem1.setText(LocaleManager.messages.getString("french"));
+    	
+    	Hmenu.setText(LocaleManager.messages.getString("helpMenu"));
+    	HmenuItem.setText(LocaleManager.messages.getString("helpPage"));
+    	HmenuItem1.setText(LocaleManager.messages.getString("aboutPage"));
+    	
+    	//notifyLanguageChange(locale);
+    }   	
 }
