@@ -4,30 +4,40 @@ import javax.swing.ImageIcon;
 
 import CST8221.Panels;
 
+/**
+ * Represents a tile on the game board.
+ */
 public class GameBoardTile {
 	
-	/**
-	 * Position relative to the GameBoard.
-	 */
+    /**
+     * Position relative to the GameBoard.
+     */
 	public int[] boardPosition;
 	
-	/**
-	 * State of current board tile, 
-	 * 
-	 *  0 - Empty
-	 *  1 - Player0 (host)
-	 *  2 - Player1 (client)
-	 */
+    /**
+     * State of the current board tile:
+     * - 0: Empty
+     * - 1: Red Player
+     * - 2: Yellow Player
+     */
 	protected byte tileState;
 	
+    /**
+     * Constructs a GameBoardTile object with the given state and position.
+     * 
+     * @param givenState the state of the tile
+     * @param pos the position of the tile
+     */
 	public GameBoardTile(byte givenState, int[] pos){
 		this.tileState = givenState;
 		this.boardPosition = pos;
 	}
 	
-	
-	
-
+	/**
+     * Gets the ImageIcon representing the image of the tile based on its state.
+     * 
+     * @return the ImageIcon representing the tile's image
+     */
 	public ImageIcon getImage() {
 		ImageIcon img;
 		switch (tileState){
@@ -48,17 +58,13 @@ public class GameBoardTile {
 		return img;
 	}
 	
+	/**
+     * Gets the state of the tile.
+     * 
+     * @return the state of the tile
+     */
 	public byte getTileState() {
 		return this.tileState;
-	}
-	
-	/**
-	 * Updates the image of a given tile sprite based on tileState
-	 * 
-	 * @return T if update success; F if fail
-	 */
-	public void setImage(){
-	
 	}
 
 }

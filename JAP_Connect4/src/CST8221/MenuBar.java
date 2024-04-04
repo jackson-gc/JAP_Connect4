@@ -24,26 +24,96 @@ import panelComponents.SystemPanel;
  * MenuBar component class
  */
 public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListener {
-    /**
-	 * auto-generated serial uid
+	/**
+	 * The generated serial version UID for serialization/deserialization.
 	 */
 	private static final long serialVersionUID = 1019707613887489945L;
 
+	/**
+	 * The Connect4 instance associated with this class.
+	 */
 	private Connect4 c4;
-	
+
+	/**
+	 * The JMenuItem for displaying scores.
+	 */
 	protected JMenuItem scoreDisplayItem;
 
 	// private JMenu and JMenuItem variables
-	private JMenu fileMenu, Cmenu, Smenu, Omenu, Lmenu, Hmenu;
-	private JMenuItem exitItem, loadItem, saveItem, CmenuItem, CmenuItem1,
-	CmenuItem2, resetScoreItem, setTurnItem, resetBoardItem,
-	LmenuItem,LmenuItem1, HmenuItem, HmenuItem1; 
-	
-	JDialog dialog;
-	
 	/**
-	 * MenuBar Constructor
+	 * The JMenu for file operations.
 	 */
+	private JMenu fileMenu;
+	/**
+	 * The JMenu for size settings.
+	 */
+	private JMenu Smenu;
+	/**
+	 * The JMenu for other options.
+	 */
+	private JMenu Omenu;
+	/**
+	 * The JMenu for load operations.
+	 */
+	private JMenu Lmenu;
+	/**
+	 * The JMenu for help options.
+	 */
+	private JMenu Hmenu;
+
+	/**
+	 * The JMenuItem for exiting the application.
+	 */
+	private JMenuItem exitItem;
+	/**
+	 * The JMenuItem for loading game data.
+	 */
+	private JMenuItem loadItem;
+	/**
+	 * The JMenuItem for saving game data.
+	 */
+	private JMenuItem saveItem;
+	/**
+	 * The JMenuItem for resetting scores.
+	 */
+	private JMenuItem resetScoreItem;
+	/**
+	 * The JMenuItem for setting the turn.
+	 */
+	private JMenuItem setTurnItem;
+	/**
+	 * The JMenuItem for resetting the board.
+	 */
+	private JMenuItem resetBoardItem;
+	/**
+	 * The JMenuItem for load option 1.
+	 */
+	private JMenuItem LmenuItem;
+	/**
+	 * The JMenuItem for load option 2.
+	 */
+	private JMenuItem LmenuItem1;
+	/**
+	 * The JMenuItem for help option 1.
+	 */
+	private JMenuItem HmenuItem;
+	/**
+	 * The JMenuItem for help option 2.
+	 */
+	private JMenuItem HmenuItem1;
+
+	/**
+	 * The dialog for displaying messages or user inputs.
+	 */
+	JDialog dialog;
+
+	
+    /**
+     * Constructs a new MenuBar object for the Connect4 game.
+     * 
+     * @param connect4 the main Connect4 game instance
+     */
+	@SuppressWarnings("deprecation")
 	public MenuBar(Connect4 connect4) {
 		this.c4 = connect4;
 		LocaleManager.addLocaleChangeListener(this);
@@ -51,7 +121,11 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
 	}
 
 		
-		
+    /**
+     * Invoked when the locale has changed.
+     * 
+     * @param newLocale the new locale to be set
+     */
 	public void localeChanged(Locale newLocale) {
 		LocaleManager.messages = ResourceBundle.getBundle("message", newLocale);
 		initializeMenu();
@@ -73,7 +147,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
 	        	c4.saveState = true;
-	        	System.out.println(c4.gb.getWorkingFile() + " is " + c4.saveState);
+	        	System.out.println(c4.gameModel.getWorkingFile() + " is " + c4.saveState);
 	        }
 	    });    
 	    
@@ -88,17 +162,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         
         add(fileMenu);
         
-        
 
-        // Connection
-        Cmenu = new JMenu(LocaleManager.messages.getString("connectionMenu"));
-        CmenuItem = new JMenuItem(LocaleManager.messages.getString("host"));
-        CmenuItem1 = new JMenuItem(LocaleManager.messages.getString("join"));
-        CmenuItem2 = new JMenuItem(LocaleManager.messages.getString("close"));
-        Cmenu.add(CmenuItem);
-        Cmenu.add(CmenuItem1);
-        Cmenu.add(CmenuItem2);
-        add(Cmenu);
 
         // Score
         Smenu = new JMenu(LocaleManager.messages.getString("scoreMenu"));
@@ -111,7 +175,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
             c4.score[0] = 0;
             c4.score[1] = 0;
             c4.updateScoreItem();
-            c4.gb.updateWorkingFile();
+            c4.gameModel.updateWorkingFile();
         });
         
         
@@ -151,7 +215,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
                         String[] parts = inputTime.split(":");
                         if (parts.length == 2) {
                             try {
-
+                            	// parse the input collecting minutes and seconds
                             	int minutes = Math.abs(Integer.parseInt(parts[0]));
                                 int seconds = Math.abs(Integer.parseInt(parts[1]));
                                 int totalTimeInSeconds = minutes * 60 + seconds;
@@ -170,7 +234,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
                         }
                         
                         if (realisticTime) {
-                        	c4.gb.refreshBoard(false, true, true);
+                        	c4.gameModel.refreshBoard(false, true, true);
                         	dialog.dispose();
                         	
                         }
@@ -196,7 +260,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         resetBoardItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {	        	
-	        	c4.gb.refreshBoard(false, true, true);
+	        	c4.gameModel.refreshBoard(false, true, true);
 	        }
 	    });    
         
@@ -215,14 +279,16 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         
         // action listener for chaning languages between french and english
         LmenuItem.addActionListener(new ActionListener() {
-	        @Override
+	        @SuppressWarnings("deprecation")
+			@Override
 	        public void actionPerformed(ActionEvent e) {
 	        	changeLanguage(new Locale("en", "US"));
 	        }
 	    });
 	    
         LmenuItem1.addActionListener(new ActionListener() {
-	        @Override
+	        @SuppressWarnings("deprecation")
+			@Override
 	        public void actionPerformed(ActionEvent e) {
 	        	changeLanguage(new Locale("fr", "FR"));
 	        }
@@ -248,25 +314,30 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             String fileName = selectedFile.getName();
-            if (!c4.gb.isNewGame || c4.saveState) {
-            	c4.gb = new GameBoard(c4, selectedFile);
+            if (!c4.gameModel.isNewGame || c4.saveState) {
+            	c4.gameModel = new GameBoard(c4, selectedFile);
             	
-            } else if (fileName.equals(c4.gb.getWorkingFile().getName())) {
+            } else if (fileName.equals(c4.gameModel.getWorkingFile().getName())) {
             	System.out.println("Not changing file.");
             
             } else {
-            	File oldFile = c4.gb.getWorkingFile();
-            	c4.gb = new GameBoard(c4, selectedFile);
+            	File oldFile = c4.gameModel.getWorkingFile();
+            	c4.gameModel = new GameBoard(c4, selectedFile);
             	System.out.println("deleting: " + oldFile.getAbsolutePath());
             	oldFile.delete();
             	
             }
-            c4.gb.refreshBoard(false, false, false);
+            c4.gameModel.refreshBoard(false, false, false);
         }
 
     }
     
-    //calls all the set text in the message files for each variable
+    /**
+     * Changes the language of the menu items and labels based on the specified
+     * locale.
+     * 
+     * @param locale the locale representing the language to be set
+     */
     private void changeLanguage(Locale locale) {
     	Locale.setDefault(locale);
     	LocaleManager.messages = ResourceBundle.getBundle("message", locale);
@@ -275,12 +346,7 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
     	exitItem.setText(LocaleManager.messages.getString("exit"));
     	loadItem.setText(LocaleManager.messages.getString("open"));
     	saveItem.setText(LocaleManager.messages.getString("save"));
-    	
-    	Cmenu.setText(LocaleManager.messages.getString("connectionMenu"));
-    	CmenuItem.setText(LocaleManager.messages.getString("host"));
-    	CmenuItem1.setText(LocaleManager.messages.getString("join"));
-    	CmenuItem2.setText(LocaleManager.messages.getString("close"));
-    	
+
     	Smenu.setText(LocaleManager.messages.getString("scoreMenu"));
     	scoreDisplayItem.setText(LocaleManager.messages.getString("current"));
     	resetScoreItem.setText(LocaleManager.messages.getString("resetScore"));
@@ -296,7 +362,5 @@ public class MenuBar extends JMenuBar implements LocaleManager.LocaleChangeListe
     	Hmenu.setText(LocaleManager.messages.getString("helpMenu"));
     	HmenuItem.setText(LocaleManager.messages.getString("helpPage"));
     	HmenuItem1.setText(LocaleManager.messages.getString("aboutPage"));
-    	
-    	//notifyLanguageChange(locale);
     }   	
 }

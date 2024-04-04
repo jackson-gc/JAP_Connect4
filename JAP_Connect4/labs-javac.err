@@ -1,43 +1,43 @@
-src\CST8221\Menu.java:50: warning: [this-escape] possible 'this' escape before subclass is fully initialized
-		setTitle("Main Menu");
-		        ^
-src\CST8221\Panels.java:33: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+src\CST8221\Menu.java:43: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+        setTitle("Main Menu");
+                ^
+src\CST8221\Panels.java:52: warning: [this-escape] possible 'this' escape before subclass is fully initialized
         setLayout(new BorderLayout());
                  ^
-src\panelComponents\SystemPanel.java:47: warning: [this-escape] possible 'this' escape before subclass is fully initialized
-        setBackground(panelBG);
-                     ^
+src\panelComponents\SystemPanel.java:68: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+	    setBackground(panelBG); // Set background color of the panel
+	                 ^
 src\panelComponents\ChatPanel.java:26: warning: [this-escape] possible 'this' escape before subclass is fully initialized
         setBackground(Color.LIGHT_GRAY);
                      ^
-src\CST8221\Connect4.java:28: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
-	public ControllableTimer timer;
-	                         ^
-src\CST8221\Connect4.java:32: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
-	public GameBoard gb;
-	                 ^
-src\CST8221\Connect4.java:34: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
-	public ResourceBundle messages = ResourceBundle.getBundle("message", LocaleManager.getCurrentLocale());
-	                      ^
-src\CST8221\Connect4.java:40: warning: [this-escape] possible 'this' escape before subclass is fully initialized
-        setTitle("Connect 4");
-                ^
-src\panelComponents\BoardPanel.java:44: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+src\panelComponents\BoardPanel.java:60: warning: [this-escape] possible 'this' escape before subclass is fully initialized
         setPreferredSize(new Dimension(1386, 100)); // Set the preferred size
                         ^
-src\model\GameBoard.java:349: warning: [try] explicit call to close() on an auto-closeable resource
+src\CST8221\Connect4.java:34: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
+    public ControllableTimer timer;
+                             ^
+src\CST8221\Connect4.java:43: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
+    public GameBoard gameModel;
+                     ^
+src\CST8221\Connect4.java:48: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
+    public NetworkManager networkManager;
+                          ^
+src\CST8221\Connect4.java:58: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+        setTitle("Connect 4");
+                ^
+src\model\GameBoard.java:432: warning: [try] explicit call to close() on an auto-closeable resource
 	        trk.close();
 	           ^
-src\model\GameBoard.java:101: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+src\model\GameBoard.java:156: warning: [this-escape] possible 'this' escape before subclass is fully initialized
 			updateWorkingFile();
 			                 ^
-src\CST8221\MenuBar.java:217: warning: [deprecation] Locale(String,String) in Locale has been deprecated
-        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("en", "US")));
-                                                               ^
-src\CST8221\MenuBar.java:218: warning: [deprecation] Locale(String,String) in Locale has been deprecated
-        LmenuItem.addActionListener(e->LocaleManager.setLocale(new Locale("fr", "FR")));
-                                                               ^
-src\CST8221\MenuBar.java:49: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+src\CST8221\MenuBar.java:119: warning: [this-escape] possible 'this' escape before subclass is fully initialized
 		LocaleManager.addLocaleChangeListener(this);
 		                                      ^
+src\CST8221\NetworkManager.java:30: warning: [this-escape] possible 'this' escape before subclass is fully initialized
+                startReceiverThread();
+                                   ^
+src\CST8221\NetworkManager.java:81: warning: [this-escape] previous possible 'this' escape happens here via invocation
+        Thread receiverThread = new Thread(() -> {
+                                           ^
 14 warnings

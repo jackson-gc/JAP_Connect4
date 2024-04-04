@@ -22,6 +22,9 @@ import CST8221.Panels;
 import model.GameBoard;
 import model.GameBoardTile;
 
+/**
+ * Represents the game board panel in the Connect4 game.
+ */
 public class BoardPanel extends JPanel {
 	/**
 	 * auto-generated serial uid
@@ -32,14 +35,26 @@ public class BoardPanel extends JPanel {
 	 */
 	private static final int GRID_WIDTH = 140;
 	
+	/**
+	 * main JPanel hosing the board grid array
+	 */
 	public JPanel boardGrid = null;
+	
+	/**
+	 * gridLayout for the game board
+	 */
     private GridLayout gridLayout = new GridLayout(GameBoard.BOARD_ROWS, GameBoard.BOARD_COLS);
 	
+    /**
+     * Passed connect4 object
+     */
     private Connect4 c4;
     
-	/**
-	 * LeftPanel class, panel container for the game board.
-	 */
+    /**
+     * Constructs a BoardPanel with the specified Connect4 game.
+     * 
+     * @param connect4 the Connect4 game instance
+     */
     public BoardPanel(Connect4 connect4) {
     	this.c4 = connect4;
         setPreferredSize(new Dimension(1386, 100)); // Set the preferred size
@@ -65,23 +80,23 @@ public class BoardPanel extends JPanel {
                     int index = boardSlots.getComponentZOrder(clickedButton);
                     int col = index % GameBoard.BOARD_COLS;
                     
-                    // Pass the row and column to a method to handle the click event
-                   
-                    if(c4.gb.colCheck()[col] > 0)
-                    	c4.gbViewControl.dropInCol(col, c4.playerMove());
+                    // check to see if the game column can accept another chip
+                    if(c4.gameModel.colCheck()[col] > 0)
+                    	c4.panel.boardPanel.dropInCol(col, c4.playerMove());
 
+                    // Print the board (dev)
+                    c4.gameModel.printBoard();
+                    c4.gameModel.checkWin(initalPlayer);
                     
-                    c4.gb.printBoard();
-                    c4.gb.checkWin(initalPlayer);
-                    
+                    // update depth counter
                     int totalDepth = 0;
-                    int[] tempColDepth = c4.gb.colCheck();
+                    int[] tempColDepth = c4.gameModel.colCheck();
                     for (int depth : tempColDepth) {
                     	totalDepth += depth;
                     }
                     
                     if (totalDepth == 0) {
-                    	c4.gb.updateWinLoss((byte) 03);
+                    	c4.gameModel.updateWinLoss((byte) 03);
                     }
                 }
             });
@@ -105,8 +120,15 @@ public class BoardPanel extends JPanel {
         g.drawImage(new ImageIcon(Panels.imgPath + "redPile.png").getImage(), 0, 0, getWidth(), getHeight(), this);
     }
     
+    /**
+     * Drops a tile into the specified column.
+     * 
+     * @param column   the column index to drop the tile into
+     * @param tileType the type of tile to drop (1 for red, 2 for yellow)
+     * @return true if the tile was successfully dropped, false otherwise
+     */
     public boolean dropInCol(int column, byte tileType) {
-    	int floor = c4.gb.colCheck()[column];
+    	int floor = c4.gameModel.colCheck()[column];
     	if (floor == 0)
     		return false;
 
@@ -122,15 +144,25 @@ public class BoardPanel extends JPanel {
 //                 e.printStackTrace();
 //             }
     	}
+    	
+    	// update game board
     	int position[] = {floor - 1, column};
-    	c4.gb.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
+    	c4.gameModel.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
+    	
+    	// switch turn
     	c4.timer.setStatus(3);
-    	c4.gb.colCheck();
-    	c4.gb.updateWorkingFile();
+    	c4.gameModel.colCheck();
+    	c4.gameModel.updateWorkingFile();
     	return true;
     }
     
-    
+    /**
+     * update a set row and col, to a given tile type
+     * 
+     * @param row row to be updated
+     * @param col col to be updated
+     * @param tileType the new type of tile to be set
+     */
     private void targetUpdate(int row, int col, byte tileType) {
         // Assuming row and col are zero-based indices
         // Calculate the index in the grid
@@ -170,12 +202,13 @@ public class BoardPanel extends JPanel {
     private void fullPaintBoard() {
         boardGrid = new JPanel();
         boardGrid.setLayout(gridLayout);
+        // Iterate though the game board
         for (int i = 0; i < GameBoard.BOARD_ROWS; i++) {
             for (int j = 0; j < GameBoard.BOARD_COLS; j++) {
                 ImageIcon icon;
                 
-                
-                switch(c4.gb.tileList[i][j].getTileState()) {
+                //switch to set the image icon to be placed on a tile to whatever the game board depicts
+                switch(c4.gameModel.tileList[i][j].getTileState()) {
                 case 0:
                 	icon = new ImageIcon(Panels.imgPath + "boardTileEmpty.png");
                 	break;
@@ -197,9 +230,12 @@ public class BoardPanel extends JPanel {
         }
     }
     
+    /**
+     * Updates the language settings for this panel.
+     * 
+     * @param locale the new Locale to set for the panel
+     */
     public void updateLanguage(Locale locale) {
     	LocaleManager.messages = ResourceBundle.getBundle("message", locale);
     }
 }
-
-
