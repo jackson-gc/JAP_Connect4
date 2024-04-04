@@ -97,6 +97,7 @@ public class GameBoard {
 		        	}
 				}
 			}
+			
 		// catch file not found exception
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(null, LocaleManager.messages.getString("errorFileNotFound"));
@@ -175,7 +176,7 @@ public class GameBoard {
 	
 		// check horizontal win states
 		for (r = 0; r < BOARD_ROWS; r++) {
-			for (c = 0; c < BOARD_COLS - MAGIC_WIN_LENGTH; c++) {
+			for (c = 0; c < BOARD_COLS - (MAGIC_WIN_LENGTH - 1); c++) {
 				boolean found = true;
 	          	for (i = 0; i < MAGIC_WIN_LENGTH; i++) {
 	          		if (tileList[r][c + i].tileState != targetTile) {
@@ -494,7 +495,7 @@ public class GameBoard {
     	if (updateTurn) {
     		if (c4.currentTurn == 02)
     			c4.playerMove();    		
-    	}
+		}
     	
     	// reset and start the timer
     	c4.timer.setStatus(3);
@@ -511,6 +512,12 @@ public class GameBoard {
         c4.revalidate(); // Inform the layout manager to recalculate the layout
         c4.repaint(); // Refresh the UI
         c4.panel.boardPanel = newBoardPanel; // Update the reference	
+		
+
+		if (!c4.networkManager.isHost) {
+			System.out.println("rest");
+			c4.panel.boardPanel.setSlots(false);
+		}
     }
 }
 

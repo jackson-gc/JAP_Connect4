@@ -49,6 +49,8 @@ public class BoardPanel extends JPanel {
      * Passed connect4 object
      */
     private Connect4 c4;
+
+    private JPanel boardSlots;
     
     /**
      * Constructs a BoardPanel with the specified Connect4 game.
@@ -62,7 +64,7 @@ public class BoardPanel extends JPanel {
         MatteBorder rightBoarder = new MatteBorder(0, 0, 0, 2, Color.GRAY);
 		setBorder(rightBoarder);
         
-        JPanel boardSlots = new JPanel(new GridLayout(1, GameBoard.BOARD_COLS));
+        boardSlots = new JPanel(new GridLayout(1, GameBoard.BOARD_COLS));
         for (int i = 0 ; i < GameBoard.BOARD_COLS; i++) {
         	JButton slot = new JButton();
         	slot.setPreferredSize(new Dimension(GRID_WIDTH, 30));
@@ -72,7 +74,6 @@ public class BoardPanel extends JPanel {
             slot.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                	byte initalPlayer = c4.currentTurn;
                     // Get the source of the event (the clicked button)
                     JButton clickedButton = (JButton) e.getSource();
                     
@@ -82,11 +83,8 @@ public class BoardPanel extends JPanel {
                     
                     // check to see if the game column can accept another chip
                     if(c4.gameModel.colCheck()[col] > 0)
-                    	c4.panel.boardPanel.dropInCol(col, c4.playerMove());
+                    	c4.panel.boardPanel.dropInCol(col, false);
 
-                    // Print the board (dev)
-                    c4.gameModel.printBoard();
-                    c4.gameModel.checkWin(initalPlayer);
                     
                     // update depth counter
                     int totalDepth = 0;
@@ -104,11 +102,19 @@ public class BoardPanel extends JPanel {
 
         
         fullPaintBoard();
-        
         add(boardSlots);
         add(boardGrid);
+
         
     }
+
+
+    public void setSlots(boolean isEnabled){
+        for (int i = 0; i < GameBoard.BOARD_COLS; i++){
+            boardSlots.getComponent(i).setEnabled(isEnabled);
+        }
+    }
+
     
     /**
      * LeftPanel graphic override, sets the background to an image of our choosing
@@ -127,32 +133,42 @@ public class BoardPanel extends JPanel {
      * @param tileType the type of tile to drop (1 for red, 2 for yellow)
      * @return true if the tile was successfully dropped, false otherwise
      */
-    public boolean dropInCol(int column, byte tileType) {
+    public boolean dropInCol(int column, boolean isPacket) {
+        byte tileType = c4.playerMove();
     	int floor = c4.gameModel.colCheck()[column];
     	if (floor == 0)
     		return false;
 
     	for (int i = 0; i < floor; i++) {
-//    		 try {
-//                 Thread.sleep(50);
-                 targetUpdate(i, column, tileType);
-                 if (i > 0) {
-                	 targetUpdate(i-1, column, (byte) 0);
-                 }
-                 
-//             } catch (InterruptedException e) {
-//                 e.printStackTrace();
-//             }
+            targetUpdate(i, column, tileType);
+            if (i > 0) {
+                targetUpdate(i-1, column, (byte) 0);
+            }
     	}
     	
     	// update game board
     	int position[] = {floor - 1, column};
     	c4.gameModel.tileList[floor - 1][column] = new GameBoardTile(tileType, position);
-    	
+
+        
     	// switch turn
     	c4.timer.setStatus(3);
     	c4.gameModel.colCheck();
     	c4.gameModel.updateWorkingFile();
+        
+        // print board (dev)
+        c4.gameModel.printBoard();
+
+        // update network if applicable
+        if (!isPacket){
+            c4.networkManager.sendPacket('=', Integer.toString(column));
+            c4.panel.boardPanel.setSlots(false);
+        }
+
+        // check if player made a winning move
+        c4.gameModel.checkWin(tileType);
+            
+
     	return true;
     }
     

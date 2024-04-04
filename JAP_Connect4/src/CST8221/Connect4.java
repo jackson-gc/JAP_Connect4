@@ -82,11 +82,12 @@ public class Connect4 extends JFrame implements ActionListener {
 
 
         if (networkManager.isHost){
-            //networkManager.sendPacket('@', "hello from host!");
+            networkManager.sendPacket('@', "You are connected to the host...");
 
         } else {
-            //networkManager.sendPacket('@', "hello from client!");
-            playerMove();
+            networkManager.sendPacket('@', "A client has connected...");
+
+            panel.boardPanel.setSlots(false);
         }
 
 

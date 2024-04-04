@@ -3,8 +3,6 @@ package CST8221;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -63,7 +61,9 @@ public class NetworkManager {
     public void receiverSocket(char header, String body) {
         switch (header) {
             case '=':
-                // Handle game state synchronization
+                int column = Integer.parseInt(body);
+                viewControl.boardPanel.dropInCol(column, true);
+                viewControl.boardPanel.setSlots(true);
                 break;
             case '@':
                 viewControl.sysPanel.sendChat(body);
